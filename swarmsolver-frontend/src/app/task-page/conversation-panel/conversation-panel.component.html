@@ -1,0 +1,213 @@
+<ng-container *ngIf="conversation$ | async as messages">
+
+  <!-- Content -->
+  <div class="relative h-screen">
+    <div class="pt-10 pb-60">
+
+      <ul class="space-y-5">
+
+        <ng-container *ngFor="let jsonMessage of messages">
+
+          <ng-container *ngIf="asMessage(jsonMessage) as message">
+            <ng-container *ngIf="message.messageType === 'USER_MESSAGE'">
+              <ng-container *ngIf="asUserMessageBody(message.messageBody) as userMessageBody">
+
+                <li class="py-2 sm:py-4">
+                  <div class="max-w-8xl px-4 sm:px-6 lg:px-8 mx-auto">
+                    <div class="max-w-2xl flex gap-x-2 sm:gap-x-4">
+                      <span
+                        class="flex-shrink-0 inline-flex items-center justify-center size-[38px] rounded-full bg-gray-600">
+                      <span class="text-sm font-medium text-white leading-none">You</span>
+                      </span>
+                      <div class="grow mt-2 space-y-3">
+                        <p class="text-gray-800 dark:text-gray-200">
+                          {{ userMessageBody.text }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+
+              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="message.messageType === 'AGENT_MESSAGE'">
+              <ng-container *ngIf="asAgentMessage(message.messageBody) as message">
+                <ng-container *ngIf="message.content.text">
+                  <li class="max-w-8xl py-2 px-4 sm:px-6 lg:px-8 mx-auto flex gap-x-2 sm:gap-x-4">
+                    <svg class="flex-shrink-0 w-[2.375rem] h-[2.375rem] rounded-full" width="38" height="38"
+                         viewBox="0 0 38 38"
+                         fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="38" height="38" rx="6" fill="#2563EB"/>
+                      <path
+                        d="M10 28V18.64C10 13.8683 14.0294 10 19 10C23.9706 10 28 13.8683 28 18.64C28 23.4117 23.9706 27.28 19 27.28H18.25"
+                        stroke="white" stroke-width="1.5"/>
+                      <path
+                        d="M13 28V18.7552C13 15.5104 15.6863 12.88 19 12.88C22.3137 12.88 25 15.5104 25 18.7552C25 22 22.3137 24.6304 19 24.6304H18.25"
+                        stroke="white" stroke-width="1.5"/>
+                      <ellipse cx="19" cy="18.6554" rx="3.75" ry="3.6" fill="white"/>
+                    </svg>
+
+                    <div class="space-y-3">
+                      <!--{{message.content.text}}-->
+                      <markdown>{{message.content.text}}</markdown>
+                      <!--
+                      <pre
+                        class="pre-wrap font-sans text-base text-gray-800 dark:text-white">{{ message.content.text }}</pre>
+                        -->
+                    </div>
+
+                  </li>
+                </ng-container>
+                <ng-container *ngIf="message.content.toolExecutionRequest">
+                  <li class="max-w-8xl py-2 px-4 sm:px-6 lg:px-8 mx-auto flex gap-x-2 sm:gap-x-4">
+                    <svg class="flex-shrink-0 w-[2.375rem] h-[2.375rem] rounded-full" width="38" height="38"
+                         viewBox="0 0 38 38"
+                         fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="38" height="38" rx="6" fill="#2563EB"/>
+                      <path
+                        d="M10 28V18.64C10 13.8683 14.0294 10 19 10C23.9706 10 28 13.8683 28 18.64C28 23.4117 23.9706 27.28 19 27.28H18.25"
+                        stroke="white" stroke-width="1.5"/>
+                      <path
+                        d="M13 28V18.7552C13 15.5104 15.6863 12.88 19 12.88C22.3137 12.88 25 15.5104 25 18.7552C25 22 22.3137 24.6304 19 24.6304H18.25"
+                        stroke="white" stroke-width="1.5"/>
+                      <ellipse cx="19" cy="18.6554" rx="3.75" ry="3.6" fill="white"/>
+                    </svg>
+
+                    <div class="space-y-3">
+                      <!-- Table Section -->
+                      <div
+                        class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden dark:bg-slate-900 dark:border-gray-700">
+                        <!-- Table -->
+                        <div class="-m-1.5 overflow-x-auto">
+                          <div class="p-1.5 min-w-full inline-block align-middle">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                              <thead class="bg-gray-50 dark:bg-slate-800">
+                              <tr>
+                                <th scope="col" class="px-6 py-3 text-start">
+                                  <div class="flex items-center gap-x-2">
+                                    <span class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-gray-200">
+                                      Tool
+                                    </span>
+                                  </div>
+                                </th>
+
+                                <th scope="col" class="px-6 py-3 text-start">
+                                  <div class="flex items-center gap-x-2">
+                                    <span class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-gray-200">
+                                      Arguments
+                                    </span>
+                                  </div>
+                                </th>
+
+                              </tr>
+                              </thead>
+
+                              <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                              <tr>
+                                <td class="size-px whitespace-nowrap">
+                                  <div class="px-6 py-3">
+                                      {{message.content.toolExecutionRequest.name}}
+                                  </div>
+                                </td>
+                                <td class="size-px whitespace-nowrap">
+                                  <div class="px-6 py-3">
+                                    {{message.content.toolExecutionRequest.arguments}}
+                                  </div>
+                                </td>
+                              </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                        <!-- End Table -->
+                      </div>
+                      <!-- End Table Section -->
+
+                    </div>
+                  </li>
+                </ng-container>
+
+              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="message.messageType === 'TOOL_EXECUTION_MESSAGE'">
+              <ng-container *ngIf="asToolExecutionMessage(message.messageBody) as message">
+                <li class="max-w-8xl py-2 px-4 sm:px-6 lg:px-8 mx-auto flex gap-x-2 sm:gap-x-4">
+                  <svg class="flex-shrink-0 w-[2.375rem] h-[2.375rem] rounded-full" width="38" height="38"
+                       viewBox="0 0 38 38"
+                       fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="38" height="38" rx="6" fill="#2563EB"/>
+                    <path
+                      d="M10 28V18.64C10 13.8683 14.0294 10 19 10C23.9706 10 28 13.8683 28 18.64C28 23.4117 23.9706 27.28 19 27.28H18.25"
+                      stroke="white" stroke-width="1.5"/>
+                    <path
+                      d="M13 28V18.7552C13 15.5104 15.6863 12.88 19 12.88C22.3137 12.88 25 15.5104 25 18.7552C25 22 22.3137 24.6304 19 24.6304H18.25"
+                      stroke="white" stroke-width="1.5"/>
+                    <ellipse cx="19" cy="18.6554" rx="3.75" ry="3.6" fill="white"/>
+                  </svg>
+
+                  <div class="space-y-3">
+
+                    <!-- Table Section -->
+                    <div
+                      class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden dark:bg-slate-900 dark:border-gray-700">
+                      <!-- Table -->
+                      <div class="-m-1.5 min-w-full overflow-x-auto">
+                        <div class="p-1.5 min-w-full inline-block align-middle">
+                          <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <thead class="bg-gray-50 dark:bg-slate-800">
+                            <tr>
+                              <th scope="col" class="px-6 py-3 text-start w-1/6">
+                                <div class="flex items-center gap-x-2">
+                                    <span class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-gray-200">
+                                      Tool
+                                    </span>
+                                </div>
+                              </th>
+
+                              <th scope="col" class="px-6 py-3 text-start w-5/6">
+                                <div class="flex items-center gap-x-2">
+                                    <span class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-gray-200">
+                                      Result
+                                    </span>
+                                </div>
+                              </th>
+
+                            </tr>
+                            </thead>
+
+                            <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                            <tr>
+                              <td class="size-px whitespace-nowrap align-top">
+                                <div class="px-6 py-3">
+                                  {{message.toolName}}
+                                </div>
+                              </td>
+                              <td class="size-px whitespace-nowrap">
+                                <div class="px-6 py-3">
+                                  <pre class="pre-wrap font-sans text-base text-gray-800 dark:text-white">{{toUnquoted(message.text)}}</pre>
+                                </div>
+                              </td>
+                            </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                      <!-- End Table -->
+                    </div>
+                    <!-- End Table Section -->
+
+
+                  </div>
+                </li>
+
+              </ng-container>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+
+      </ul>
+    </div>
+
+  </div>
+  <!-- End Content -->
+</ng-container>

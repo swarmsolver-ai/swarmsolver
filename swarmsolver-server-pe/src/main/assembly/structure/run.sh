@@ -1,0 +1,1 @@
+java -cp ${project.build.finalName}-spring-boot.jar -Dloader.path=lib org.springframework.boot.loader.PropertiesLauncher --spring.config.location=./application.yaml

@@ -1,0 +1,31 @@
+name: Maven CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build_and_test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+
+      - name: Build project with Maven
+        run: mvn -X clean install -Pno-swagger
+
+      - name: Create assembly
+        run: mvn -f swarmsolver-server-pe/pom.xml assembly:single
+
+      - name: Archive assembly
+        uses: actions/upload-artifact@v3
+        with:
+          name: assembly
+          path: swarmsolver-server-pe/target/swarmsolver-server-pe-*.zip

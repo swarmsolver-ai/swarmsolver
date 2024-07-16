@@ -1,0 +1,20 @@
+<ng-container *ngIf="task$ | async as task">
+  <div class="grid grid-cols-12">
+    <div class="col-span-2 h-screen sticky top-0">
+      <app-task-list
+        [task]="task"
+        [selection]="selection$ | async"
+        (stepSelected)="stepSelected($event)"
+        (stepAdded)="stepAdded($event)"
+      >
+      </app-task-list>
+    </div>
+    <div class="col-span-10">
+      <app-conversation-container *ngIf="agent$ | async as agent"
+                                  [agent]="agent"
+                                  [task]="task">
+
+      </app-conversation-container>
+    </div>
+  </div>
+</ng-container>

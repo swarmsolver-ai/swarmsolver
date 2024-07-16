@@ -1,0 +1,5 @@
+  <!-- Content -->
+  <div class="relative h-screen z-40">
+    <app-conversation-panel [conversationCoordinate]="agent!.conversationCoordinate!"></app-conversation-panel>
+    <app-chat-box [task]="task" (stepAdded)="stepAdded($event)" (messageSent)="onUserChatMessage($event)"></app-chat-box>
+  </div>

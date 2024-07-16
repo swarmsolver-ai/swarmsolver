@@ -1,0 +1,882 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Api Documentation",
+    "description": "Api Documentation",
+    "termsOfService": "urn:tos",
+    "contact": {},
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    },
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8081",
+      "description": "Inferred Url"
+    }
+  ],
+  "tags": [
+    {
+      "name": "conversation-controller",
+      "description": "Conversation Controller"
+    },
+    {
+      "name": "project-controller",
+      "description": "Project Controller"
+    },
+    {
+      "name": "scripting-sandbox-controller",
+      "description": "Scripting Sandbox Controller"
+    },
+    {
+      "name": "task-controller",
+      "description": "Task Controller"
+    },
+    {
+      "name": "tool-controller",
+      "description": "Tool Controller"
+    }
+  ],
+  "paths": {
+    "/api/conversation": {
+      "get": {
+        "tags": [
+          "conversation-controller"
+        ],
+        "summary": "read",
+        "operationId": "readUsingGET",
+        "parameters": [
+          {
+            "name": "mainTaskId",
+            "in": "query",
+            "description": "mainTaskId",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subTaskId",
+            "in": "query",
+            "description": "subTaskId",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "conversationId",
+            "in": "query",
+            "description": "conversationId",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringArrayResult"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/conversation/messages/{subscriberId}": {
+      "get": {
+        "tags": [
+          "conversation-controller"
+        ],
+        "summary": "streamSse",
+        "operationId": "streamSseUsingGET",
+        "parameters": [
+          {
+            "name": "subscriberId",
+            "in": "path",
+            "description": "subscriberId",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SseEmitter"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/project": {
+      "get": {
+        "tags": [
+          "project-controller"
+        ],
+        "summary": "getAllProjects",
+        "operationId": "getAllProjectsUsingGET",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Project"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/sandbox/script": {
+      "post": {
+        "tags": [
+          "scripting-sandbox-controller"
+        ],
+        "summary": "test",
+        "operationId": "testUsingPOST",
+        "parameters": [
+          {
+            "name": "fileName",
+            "in": "query",
+            "description": "fileName",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/task/agent": {
+      "post": {
+        "tags": [
+          "task-controller"
+        ],
+        "summary": "getAgent",
+        "operationId": "getAgentUsingPOST",
+        "parameters": [
+          {
+            "name": "mainTaskId",
+            "in": "query",
+            "description": "mainTaskId",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "taskId",
+            "in": "query",
+            "description": "taskId",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentSummaryDTO"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/task/maintask": {
+      "get": {
+        "tags": [
+          "task-controller"
+        ],
+        "summary": "getMainTask",
+        "operationId": "getMainTaskUsingGET",
+        "parameters": [
+          {
+            "name": "taskId",
+            "in": "query",
+            "description": "taskId",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "task-controller"
+        ],
+        "summary": "createMainTask",
+        "operationId": "createMainTaskUsingPOST",
+        "parameters": [
+          {
+            "name": "title",
+            "in": "query",
+            "description": "title",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskId"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/task/subtask": {
+      "post": {
+        "tags": [
+          "task-controller"
+        ],
+        "summary": "createSubTask",
+        "operationId": "createSubTaskUsingPOST",
+        "parameters": [
+          {
+            "name": "mainTaskId",
+            "in": "query",
+            "description": "mainTaskId",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "parentTaskId",
+            "in": "query",
+            "description": "parentTaskId",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "description": "description",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskId"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/task/subtask/title": {
+      "put": {
+        "tags": [
+          "task-controller"
+        ],
+        "summary": "updateSubTaskTitle",
+        "operationId": "updateSubTaskTitleUsingPUT",
+        "parameters": [
+          {
+            "name": "mainTaskId",
+            "in": "query",
+            "description": "mainTaskId",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subTaskId",
+            "in": "query",
+            "description": "subTaskId",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "title",
+            "in": "query",
+            "description": "title",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/task/task/remove": {
+      "put": {
+        "tags": [
+          "task-controller"
+        ],
+        "summary": "deleteTask",
+        "operationId": "deleteTaskUsingPUT",
+        "parameters": [
+          {
+            "name": "taskId",
+            "in": "query",
+            "description": "taskId",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/task/task/title": {
+      "put": {
+        "tags": [
+          "task-controller"
+        ],
+        "summary": "updateTaskTitle",
+        "operationId": "updateTaskTitleUsingPUT",
+        "parameters": [
+          {
+            "name": "taskId",
+            "in": "query",
+            "description": "taskId",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "title",
+            "in": "query",
+            "description": "title",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/task/tasks": {
+      "get": {
+        "tags": [
+          "task-controller"
+        ],
+        "summary": "list",
+        "operationId": "listUsingGET",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TaskSummaryDTO"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/task/usermsg": {
+      "post": {
+        "tags": [
+          "task-controller"
+        ],
+        "summary": "userMessage",
+        "operationId": "userMessageUsingPOST",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserMessageDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/tools": {
+      "get": {
+        "tags": [
+          "tool-controller"
+        ],
+        "summary": "getAllTools",
+        "operationId": "getAllToolsUsingGET",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TooDescriptionDTO"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AgentId": {
+        "title": "AgentId",
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string"
+          }
+        }
+      },
+      "AgentSummaryDTO": {
+        "title": "AgentSummaryDTO",
+        "type": "object",
+        "properties": {
+          "agentId": {
+            "$ref": "#/components/schemas/AgentId"
+          },
+          "conversationCoordinate": {
+            "$ref": "#/components/schemas/ConversationCoordinate"
+          }
+        }
+      },
+      "ConversationCoordinate": {
+        "title": "ConversationCoordinate",
+        "type": "object",
+        "properties": {
+          "conversationId": {
+            "$ref": "#/components/schemas/ConversationId"
+          },
+          "taskCoordinate": {
+            "$ref": "#/components/schemas/TaskCoordinate"
+          }
+        }
+      },
+      "ConversationId": {
+        "title": "ConversationId",
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string"
+          }
+        }
+      },
+      "Project": {
+        "title": "Project",
+        "type": "object",
+        "properties": {
+          "baseDir": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "SseEmitter": {
+        "title": "SseEmitter",
+        "type": "object",
+        "properties": {
+          "timeout": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "StringArrayResult": {
+        "title": "StringArrayResult",
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Task": {
+        "title": "Task",
+        "type": "object",
+        "properties": {
+          "agentId": {
+            "$ref": "#/components/schemas/AgentId"
+          },
+          "agentName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "id": {
+            "$ref": "#/components/schemas/TaskId"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "COMPLETED",
+              "CREATED",
+              "STARTED"
+            ]
+          },
+          "subTasks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Task"
+            }
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "TaskCoordinate": {
+        "title": "TaskCoordinate",
+        "type": "object",
+        "properties": {
+          "mainTaskId": {
+            "$ref": "#/components/schemas/TaskId"
+          },
+          "subTaskId": {
+            "$ref": "#/components/schemas/TaskId"
+          }
+        }
+      },
+      "TaskId": {
+        "title": "TaskId",
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string"
+          }
+        }
+      },
+      "TaskSummaryDTO": {
+        "title": "TaskSummaryDTO",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "TooDescriptionDTO": {
+        "title": "TooDescriptionDTO",
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "parameters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ToolParameterDTO"
+            }
+          },
+          "returnType": {
+            "type": "string",
+            "enum": [
+              "SOURCE_CODE",
+              "TEXT"
+            ]
+          },
+          "returnTypeDetails": {
+            "type": "string"
+          }
+        }
+      },
+      "ToolParameterDTO": {
+        "title": "ToolParameterDTO",
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "parameterType": {
+            "type": "string",
+            "enum": [
+              "SOURCE_CODE",
+              "TEXT"
+            ]
+          },
+          "parameterTypeDetails": {
+            "type": "string"
+          }
+        }
+      },
+      "UserMessageDTO": {
+        "title": "UserMessageDTO",
+        "type": "object",
+        "properties": {
+          "mainTaskId": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "subTaskId": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

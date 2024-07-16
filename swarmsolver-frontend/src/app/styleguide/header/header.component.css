@@ -1,0 +1,7 @@
+nav {
+  background-color: rgba(255, 255, 255, 0.9); /* Light mode: white with 90% opacity */
+}
+
+.dark nav {
+  background-color: rgba(15, 23, 42, 0.9); /* Dark mode: dark color with 90% opacity */
+}

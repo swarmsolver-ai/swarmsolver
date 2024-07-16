@@ -1,0 +1,35 @@
+<div class="max-w-80 border-e-2 border-gray-200 dark:border-gray-700 fixed left-0 top-20 bottom-0 w-64 pb-20">
+  <nav class="-me-0.5 flex flex-col space-y-3 p-4 overflow-y-auto h-[85vh] " style="scrollbar-width: none; -ms-overflow-style: none;">
+      @for (task of task.subTasks; track task) {
+        @if (selection?.id === task.id) {
+          <a href="javascript:void(0);" (click)="selectStep(task!.id!.identifier!)" class="py-1 pe-4 inline-flex items-center gap-2 border-e-2 border-blue-500 text-sm font-medium whitespace-nowrap text-blue-600 focus:outline-none focus:text-blue-800" aria-current="page">
+            {{task.title}}
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-md"><path fill-rule="evenodd" clip-rule="evenodd" d="M3 12C3 10.8954 3.89543 10 5 10C6.10457 10 7 10.8954 7 12C7 13.1046 6.10457 14 5 14C3.89543 14 3 13.1046 3 12ZM10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12ZM17 12C17 10.8954 17.8954 10 19 10C20.1046 10 21 10.8954 21 12C21 13.1046 20.1046 14 19 14C17.8954 14 17 13.1046 17 12Z" fill="currentColor"></path></svg>
+          </a>
+        } @else {
+          <a href="javascript:void(0);" (click)="selectStep(task!.id!.identifier!)" class="py-1 pe-4 inline-flex items-center gap-2 border-e-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-blue-600 focus:outline-none focus:text-blue-600">
+            {{task.title}}
+          </a>
+        }
+      }
+  </nav>
+
+  <button type="button"
+          class="inline-flex justify-center items-center gap-x-2 rounded-lg font-medium text-gray-800 hover:text-blue-600 text-xs sm:text-sm dark:text-gray-200 dark:hover:text-blue-500 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+          (click)="addStep()"
+  >
+    <svg class="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+         stroke-linejoin="round">
+      <path d="M5 12h14"/>
+      <path d="M12 5v14"/>
+    </svg>
+    New chat
+  </button>
+
+
+</div>
+
+<jw-modal [id]="addStepDialogId()">
+  <app-step-dialog [spec]="spec"></app-step-dialog>
+</jw-modal>
