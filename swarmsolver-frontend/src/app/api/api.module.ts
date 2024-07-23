@@ -5,7 +5,6 @@ import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
 import { ConversationControllerService } from './services/conversation-controller.service';
-import { ProjectControllerService } from './services/project-controller.service';
 import { ScriptingSandboxControllerService } from './services/scripting-sandbox-controller.service';
 import { TaskControllerService } from './services/task-controller.service';
 import { ToolControllerService } from './services/tool-controller.service';
@@ -19,7 +18,6 @@ import { ToolControllerService } from './services/tool-controller.service';
   declarations: [],
   providers: [
     ConversationControllerService,
-    ProjectControllerService,
     ScriptingSandboxControllerService,
     TaskControllerService,
     ToolControllerService,

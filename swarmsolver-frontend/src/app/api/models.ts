@@ -4,7 +4,6 @@ export { AgentId } from './models/agent-id';
 export { AgentSummaryDto } from './models/agent-summary-dto';
 export { ConversationCoordinate } from './models/conversation-coordinate';
 export { ConversationId } from './models/conversation-id';
-export { Project } from './models/project';
 export { SseEmitter } from './models/sse-emitter';
 export { StringArrayResult } from './models/string-array-result';
 export { Task } from './models/task';

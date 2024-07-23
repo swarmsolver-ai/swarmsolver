@@ -20,6 +20,8 @@ import { getAgentUsingPost } from '../fn/task-controller/get-agent-using-post';
 import { GetAgentUsingPost$Params } from '../fn/task-controller/get-agent-using-post';
 import { getMainTaskUsingGet } from '../fn/task-controller/get-main-task-using-get';
 import { GetMainTaskUsingGet$Params } from '../fn/task-controller/get-main-task-using-get';
+import { getWorkSpacesUsingGet } from '../fn/task-controller/get-work-spaces-using-get';
+import { GetWorkSpacesUsingGet$Params } from '../fn/task-controller/get-work-spaces-using-get';
 import { listUsingGet } from '../fn/task-controller/list-using-get';
 import { ListUsingGet$Params } from '../fn/task-controller/list-using-get';
 import { Task } from '../models/task';
@@ -336,6 +338,39 @@ export class TaskControllerService extends BaseService {
   userMessageUsingPost(params?: UserMessageUsingPost$Params, context?: HttpContext): Observable<void> {
     return this.userMessageUsingPost$Response(params, context).pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
+    );
+  }
+
+  /** Path part for operation `getWorkSpacesUsingGet()` */
+  static readonly GetWorkSpacesUsingGetPath = '/api/task/workspaces';
+
+  /**
+   * getWorkSpaces.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getWorkSpacesUsingGet()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getWorkSpacesUsingGet$Response(params?: GetWorkSpacesUsingGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<string>>> {
+    return getWorkSpacesUsingGet(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * getWorkSpaces.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getWorkSpacesUsingGet$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getWorkSpacesUsingGet(params?: GetWorkSpacesUsingGet$Params, context?: HttpContext): Observable<Array<string>> {
+    return this.getWorkSpacesUsingGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<string>>): Array<string> => r.body)
     );
   }
 

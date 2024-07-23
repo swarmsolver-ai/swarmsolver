@@ -9,18 +9,19 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class ScriptBasedAgentSpecificationRegistry implements AgentSpecificationRegistry {
 
-    private final AgentConfigWorkspaceStructure workspaceStructure;
+    private final DirectoryStructure directoryStructure;
 
     private final ScriptingService scriptingService;
 
-    public ScriptBasedAgentSpecificationRegistry(DirectoryStructure directoryStructure, ScriptingService scriptingService) {
-        this.workspaceStructure = new AgentConfigWorkspaceStructure(directoryStructure);
+    public ScriptBasedAgentSpecificationRegistry(DirectoryStructure directoryStructure, DirectoryStructure directoryStructure1, ScriptingService scriptingService) {
+        this.directoryStructure = directoryStructure1;
         this.scriptingService = scriptingService;
     }
 
     @Override
-    public AgentSpecification<? extends Agent> getSpecification(String agentName) {
-       return (AgentSpecification<? extends Agent> ) scriptingService.runFile(workspaceStructure.getAgentsConfigFile());
+    public AgentSpecification<? extends Agent> getSpecification(String workspaceName, String agentName) {
+        AgentConfigWorkspaceStructure workspaceStructure = new AgentConfigWorkspaceStructure(workspaceName, directoryStructure);
+        return (AgentSpecification<? extends Agent> ) scriptingService.runFile(workspaceName, workspaceStructure.getAgentsConfigFile());
     }
 
 }

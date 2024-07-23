@@ -10,6 +10,11 @@ import { RequestBuilder } from '../../request-builder';
 export interface TestUsingPost$Params {
 
 /**
+ * workSpaceName
+ */
+  workSpaceName?: string;
+
+/**
  * fileName
  */
   fileName?: string;
@@ -18,6 +23,7 @@ export interface TestUsingPost$Params {
 export function testUsingPost(http: HttpClient, rootUrl: string, params?: TestUsingPost$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
   const rb = new RequestBuilder(rootUrl, testUsingPost.PATH, 'post');
   if (params) {
+    rb.query('workSpaceName', params.workSpaceName, {"style":"form"});
     rb.query('fileName', params.fileName, {"style":"form"});
   }
 

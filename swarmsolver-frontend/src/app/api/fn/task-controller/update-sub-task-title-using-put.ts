@@ -10,6 +10,11 @@ import { RequestBuilder } from '../../request-builder';
 export interface UpdateSubTaskTitleUsingPut$Params {
 
 /**
+ * workSpaceName
+ */
+  workSpaceName?: string;
+
+/**
  * mainTaskId
  */
   mainTaskId?: string;
@@ -28,6 +33,7 @@ export interface UpdateSubTaskTitleUsingPut$Params {
 export function updateSubTaskTitleUsingPut(http: HttpClient, rootUrl: string, params?: UpdateSubTaskTitleUsingPut$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
   const rb = new RequestBuilder(rootUrl, updateSubTaskTitleUsingPut.PATH, 'put');
   if (params) {
+    rb.query('workSpaceName', params.workSpaceName, {"style":"form"});
     rb.query('mainTaskId', params.mainTaskId, {"style":"form"});
     rb.query('subTaskId', params.subTaskId, {"style":"form"});
     rb.query('title', params.title, {"style":"form"});

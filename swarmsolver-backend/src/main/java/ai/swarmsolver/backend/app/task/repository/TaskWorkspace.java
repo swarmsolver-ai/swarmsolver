@@ -1,7 +1,6 @@
 package ai.swarmsolver.backend.app.task.repository;
 
 import ai.swarmsolver.backend.app.task.model.TaskCoordinate;
-import ai.swarmsolver.backend.app.task.model.TaskId;
 import ai.swarmsolver.backend.infra.DirectoryStructure;
 import lombok.Getter;
 
@@ -26,16 +25,12 @@ public class TaskWorkspace {
         return new TaskWorkspace(directoryStructure, taskCoordinate);
     }
 
-    static public TaskWorkspace of(DirectoryStructure directoryStructure) {
-        return of(directoryStructure, null);
-    }
-
     public File getMainTasksDir() {
-        return new File(directoryStructure.getWorkspaceDir());
+        return new File(directoryStructure.getDataDir(taskCoordinate.getWorkSpaceName()));
     }
 
-    public File getMainTaskFileLocation(TaskId taskId) {
-        return new File(getMainTasksDir() + File.separator + taskId.getIdentifier() + ".json");
+    public File getMainTaskFileLocation() {
+        return new File(getMainTasksDir() + File.separator + taskCoordinate.getMainTaskId().getIdentifier() + ".json");
     }
 
     public List<File> listMainTaskFileLocations() {

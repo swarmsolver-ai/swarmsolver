@@ -11,6 +11,11 @@ import { StringArrayResult } from '../../models/string-array-result';
 export interface ReadUsingGet$Params {
 
 /**
+ * workSpaceName
+ */
+  workSpaceName?: string;
+
+/**
  * mainTaskId
  */
   mainTaskId?: string;
@@ -29,6 +34,7 @@ export interface ReadUsingGet$Params {
 export function readUsingGet(http: HttpClient, rootUrl: string, params?: ReadUsingGet$Params, context?: HttpContext): Observable<StrictHttpResponse<StringArrayResult>> {
   const rb = new RequestBuilder(rootUrl, readUsingGet.PATH, 'get');
   if (params) {
+    rb.query('workSpaceName', params.workSpaceName, {"style":"form"});
     rb.query('mainTaskId', params.mainTaskId, {"style":"form"});
     rb.query('subTaskId', params.subTaskId, {"style":"form"});
     rb.query('conversationId', params.conversationId, {"style":"form"});

@@ -16,8 +16,8 @@ public class ScriptingSandboxController {
     }
 
     @PostMapping(value = "/script", produces = MediaType.APPLICATION_JSON_VALUE)
-    public void test(String fileName) {
-        scriptingService.runFile(fileName);
+    public void test(String workSpaceName, String fileName) {
+        scriptingService.runFile(workSpaceName, fileName);
     }
 
 }

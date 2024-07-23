@@ -8,12 +8,8 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 export class TableHeaderComponent {
 
   @Input()
-  addActionLabel: string= '==>set addActionLabel<==';
+  title: string = '';
 
-  @Output()
-  add = new EventEmitter<void>();
-
-  addClicked() {
-    this.add.emit();
-  }
+  @Input()
+  subTitle: string = '';
 }

@@ -10,6 +10,11 @@ import { RequestBuilder } from '../../request-builder';
 export interface DeleteTaskUsingPut$Params {
 
 /**
+ * workSpaceName
+ */
+  workSpaceName?: string;
+
+/**
  * taskId
  */
   taskId?: string;
@@ -18,6 +23,7 @@ export interface DeleteTaskUsingPut$Params {
 export function deleteTaskUsingPut(http: HttpClient, rootUrl: string, params?: DeleteTaskUsingPut$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
   const rb = new RequestBuilder(rootUrl, deleteTaskUsingPut.PATH, 'put');
   if (params) {
+    rb.query('workSpaceName', params.workSpaceName, {"style":"form"});
     rb.query('taskId', params.taskId, {"style":"form"});
   }
 

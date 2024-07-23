@@ -21,27 +21,29 @@ public class TaskServiceTest extends TestBase {
     @Autowired
     TaskServiceTestUtils taskStepDefs;
 
+    String workSpaceName = "default";
+    
     @Test
     public void create() {
         // given a main  task name
         String main_task_name = "main-task-" + UUID.randomUUID();
 
         // when I create a main task
-        TaskId main_task_id = taskService.createMainTask(main_task_name).getId();
+        TaskCoordinate taskCoordinate = taskService.createMainTask(workSpaceName, main_task_name);
         printDirStructure("task created");
 
         // I can find the task by its's main_task_id
-        Task task = taskService.getMainTask(main_task_id);
+        Task task = taskService.getMainTask(taskCoordinate);
 
         assertNotNull(task);
-        assertEquals(main_task_id, task.getId());
+        assertEquals(taskCoordinate.getMainTaskId(), task.getId());
         assertEquals(main_task_name, task.getTitle());
     }
     @Test
     public void editTask() {
         // given a main  task name
         String main_task_name = "main-task-" + UUID.randomUUID();
-        TaskId main_task_id = taskService.createMainTask(main_task_name).getId();
+        TaskCoordinate main_task_id = taskService.createMainTask(workSpaceName, main_task_name);
         printDirStructure("task created");
 
         // when I edit the task
@@ -57,11 +59,11 @@ public class TaskServiceTest extends TestBase {
     @Test
     public void delete() {
         // given a main task
-        TaskId mainTaskId = taskStepDefs.createMainTask();
+        TaskCoordinate  taskC = taskStepDefs.createMainTask();
 
         // when I delete it
         printDirStructure("task created");
-        taskService.deleteMainTask(mainTaskId);
+        taskService.deleteMainTask(taskC);
         printDirStructure("task deleted");
 
 
@@ -71,18 +73,18 @@ public class TaskServiceTest extends TestBase {
     @Test
     public void createSubTask() {
         // given a main task
-        TaskId mainTaskId = taskStepDefs.createMainTask();
+        TaskCoordinate mainTaskCoordinate = taskStepDefs.createMainTask();
 
         // and a subtask
         String sub_task_name = "sub-task-" + UUID.randomUUID();
 
         // when I add a subtask directly to the main task, ie parent = main task
-        TaskId subTaskId = taskService.createSubTask(mainTaskId, sub_task_name).getId();
+        TaskCoordinate subTaskCoordinate = taskService.createSubTask(mainTaskCoordinate, sub_task_name);
         printDirStructure("subtask created");
 
         // then I can find the sub task via mainTaskId and walk the sub task tree
         {
-            Task task = taskService.getMainTask(mainTaskId);
+            Task task = taskService.getMainTask(mainTaskCoordinate);
             assertNotNull(task.getSubTasks());
             assertEquals(1, task.getSubTasks().size());
 
@@ -90,9 +92,9 @@ public class TaskServiceTest extends TestBase {
             assertEquals(sub_task_name, subTask.getTitle());
         }
 
-        // and I can find the sub task via mainTaskId and subTaskId
+        // and I can find the sub task via mainTaskId and subTaskCoordinate
         {
-            Task subTask = taskService.getSubTask(mainTaskId, subTaskId);
+            Task subTask = taskService.getSubTask(subTaskCoordinate);
             assertEquals(sub_task_name, subTask.getTitle());
         }
 
@@ -102,32 +104,48 @@ public class TaskServiceTest extends TestBase {
     @Test
     public void setDescription() {
         // given a task
-        TaskId mainTaskId = taskStepDefs.createMainTask();
-        TaskId taskId = taskService.createSubTask(mainTaskId, "subtask").getId();
-        TaskCoordinate taskCoordinate = TaskCoordinate.of(mainTaskId, taskId);
+        TaskCoordinate mainTaskCoordinate = taskStepDefs.createMainTask();
+        TaskCoordinate taskCoordinate = taskService.createSubTask(mainTaskCoordinate, "subtask");
         // when I set the description
         String description = "description-" + UUID.randomUUID();
         taskService.setDescription(taskCoordinate, description);
 
         // then the description field is filled in
-        Task task = taskService.getSubTask(mainTaskId, taskId);
+        Task task = taskService.getSubTask(taskCoordinate);
         assertEquals(description, task.getDescription());
+
+    }
+
+    @Test
+    public void updateTaskTitle() {
+        // given a task
+        TaskCoordinate mainTaskCoordinate = taskStepDefs.createMainTask();
+        printDirStructure("task created");
+
+        // when I update the title
+        String title = "title-" + UUID.randomUUID();
+        taskService.updateTaskTitle(mainTaskCoordinate, title);
+        printDirStructure("title updated");
+
+
+        // then the title is updated
+        Task task = taskService.getMainTask(mainTaskCoordinate);
+        assertEquals(title, task.getTitle());
 
     }
 
     @Test
     public void setAgentName()  {
         // given a task with a subtask
-        TaskId mainTaskId = taskStepDefs.createMainTask();
-        TaskId taskId = taskService.createSubTask(mainTaskId, "subtask").getId();
-        TaskCoordinate taskCoordinate = TaskCoordinate.of(mainTaskId, taskId);
+        TaskCoordinate mainTaskCoordinate = taskStepDefs.createMainTask();
+        TaskCoordinate subTaskCoordinate = taskService.createSubTask(mainTaskCoordinate, "subtask");
 
         // when i set the agent name
         String agentName = "agent-name-" + UUID.randomUUID();
-        taskService.setAgentName(taskCoordinate, agentName);
+        taskService.setAgentName(subTaskCoordinate, agentName);
 
         // then the agent name field is filled in
-        Task task = taskService.getSubTask(mainTaskId, taskId);
+        Task task = taskService.getSubTask(subTaskCoordinate);
         assertEquals(agentName, task.getAgentName());
 
     }
@@ -136,16 +154,15 @@ public class TaskServiceTest extends TestBase {
     @Test
     public void sendMessage()  {
         // given a task with a subtask
-        TaskId mainTaskId = taskStepDefs.createMainTask();
-        TaskId taskId = taskService.createSubTask(mainTaskId, "subtask").getId();
-        TaskCoordinate taskCoordinate = TaskCoordinate.of(mainTaskId, taskId);
+        TaskCoordinate mainTaskCoordinate = taskStepDefs.createMainTask();
+        TaskCoordinate subTaskCoordinate = taskService.createSubTask(mainTaskCoordinate, "subtask");
 
         // given i set the agent name
         String agentName = "agent-name-" + UUID.randomUUID();
-        taskService.setAgentName(taskCoordinate, agentName);
+        taskService.setAgentName(subTaskCoordinate, agentName);
 
         // when I send a message to the agent
-        taskService.userMessage(taskCoordinate, "hello");
+        taskService.userMessage(subTaskCoordinate, "hello");
 
     }
 

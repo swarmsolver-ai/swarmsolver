@@ -11,6 +11,11 @@ import { Task } from '../../models/task';
 export interface GetMainTaskUsingGet$Params {
 
 /**
+ * workSpaceName
+ */
+  workSpaceName?: string;
+
+/**
  * taskId
  */
   taskId?: string;
@@ -19,6 +24,7 @@ export interface GetMainTaskUsingGet$Params {
 export function getMainTaskUsingGet(http: HttpClient, rootUrl: string, params?: GetMainTaskUsingGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Task>> {
   const rb = new RequestBuilder(rootUrl, getMainTaskUsingGet.PATH, 'get');
   if (params) {
+    rb.query('workSpaceName', params.workSpaceName, {"style":"form"});
     rb.query('taskId', params.taskId, {"style":"form"});
   }
 

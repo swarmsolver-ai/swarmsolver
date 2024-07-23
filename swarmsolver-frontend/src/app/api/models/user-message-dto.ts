@@ -4,4 +4,5 @@ export interface UserMessageDto {
   mainTaskId?: string;
   message?: string;
   subTaskId?: string;
+  workSpaceName?: string;
 }

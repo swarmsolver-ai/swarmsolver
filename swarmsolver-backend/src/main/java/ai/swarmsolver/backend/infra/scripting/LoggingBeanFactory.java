@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 public class LoggingBeanFactory implements ScriptBeanFactory<LoggingBean> {
 
     @Override
-    public LoggingBean createInstance() {
+    public LoggingBean createInstance(String workSpaceName) {
         return new LoggingBean();
     }
 

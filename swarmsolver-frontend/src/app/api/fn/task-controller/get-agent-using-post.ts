@@ -11,6 +11,11 @@ import { AgentSummaryDto } from '../../models/agent-summary-dto';
 export interface GetAgentUsingPost$Params {
 
 /**
+ * workSpaceName
+ */
+  workSpaceName?: string;
+
+/**
  * mainTaskId
  */
   mainTaskId?: string;
@@ -24,6 +29,7 @@ export interface GetAgentUsingPost$Params {
 export function getAgentUsingPost(http: HttpClient, rootUrl: string, params?: GetAgentUsingPost$Params, context?: HttpContext): Observable<StrictHttpResponse<AgentSummaryDto>> {
   const rb = new RequestBuilder(rootUrl, getAgentUsingPost.PATH, 'post');
   if (params) {
+    rb.query('workSpaceName', params.workSpaceName, {"style":"form"});
     rb.query('mainTaskId', params.mainTaskId, {"style":"form"});
     rb.query('taskId', params.taskId, {"style":"form"});
   }

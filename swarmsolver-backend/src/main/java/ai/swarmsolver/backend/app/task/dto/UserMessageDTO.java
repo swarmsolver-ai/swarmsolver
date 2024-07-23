@@ -8,6 +8,7 @@ import lombok.*;
 @Builder
 @Getter
 public class UserMessageDTO {
+    private String workSpaceName;
     private String mainTaskId;
     private String subTaskId;
     private String message;

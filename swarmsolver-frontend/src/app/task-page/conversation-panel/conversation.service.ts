@@ -5,6 +5,7 @@ import {BehaviorSubject, Observable, Subject} from "rxjs";
 import {ConversationCoordinate} from "../../api/models/conversation-coordinate";
 import{ environment} from "../../../environments/environment";
 import { Location } from '@angular/common';
+import {WorkSpaceService} from "../../work-space.service";
 
 @Injectable()
 export class ConversationService  {
@@ -13,7 +14,7 @@ export class ConversationService  {
 
   public conversation$: Observable<string[]|null> = this.store
 
-  constructor(private conversationControllerService : ConversationControllerService, private location: Location) {
+  constructor(private conversationControllerService : ConversationControllerService, private workSpaceService: WorkSpaceService) {
   }
 
   getConversation(conversationCoordinate: ConversationCoordinate | null) {
@@ -21,6 +22,7 @@ export class ConversationService  {
       this.store.next([])
     } else {
       this.conversationControllerService.readUsingGet({
+        workSpaceName: this.workSpaceService.selectedWorkSpace(),
         mainTaskId: conversationCoordinate.taskCoordinate!.mainTaskId!.identifier,
         subTaskId: conversationCoordinate.taskCoordinate!.subTaskId!.identifier,
         conversationId: conversationCoordinate.conversationId!.identifier

@@ -10,9 +10,12 @@ import java.util.Properties;
 
 public class KeysBean {
 
+    private final String workSpaceName;
+
     private  final DirectoryStructure directoryStructure;
 
-    public KeysBean(DirectoryStructure directoryStructure) {
+    public KeysBean(String workSpaceName, DirectoryStructure directoryStructure) {
+        this.workSpaceName = workSpaceName;
         this.directoryStructure = directoryStructure;
     }
 
@@ -28,7 +31,7 @@ public class KeysBean {
     }
 
     private  String getKeyProperties() {
-        return directoryStructure.getConfigDir() + File.separator + "keys.properties";
+        return directoryStructure.getConfigDir(workSpaceName) + File.separator + "keys.properties";
     }
 
 }

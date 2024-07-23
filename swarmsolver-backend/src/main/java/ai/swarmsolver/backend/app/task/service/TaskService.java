@@ -38,21 +38,22 @@ public class TaskService {
         this.agentService = agentService;
     }
 
-    public Task getMainTask(TaskId mainTaskId) {
-        return taskRepository.fetch(mainTaskId);
+    public Task getMainTask(TaskCoordinate taskCoordinate) {
+        return taskRepository.fetch(taskCoordinate);
     }
 
-    public Task createMainTask(String title) {
+    public TaskCoordinate createMainTask(String workSpaceName, String title) {
         Task task = createTask(title);
-        taskRepository.store(task);
-        TaskWorkspace workspace = TaskWorkspace.of(directoryStructure, TaskCoordinate.of(task.getId()));
+        TaskCoordinate taskCoordinate = TaskCoordinate.of(workSpaceName, task.getId());
+        taskRepository.store(taskCoordinate, task);
+        TaskWorkspace workspace = TaskWorkspace.of(directoryStructure, taskCoordinate);
         workspace.getMainTaskDir().mkdirs();
-        return task;
+        return taskCoordinate;
     }
 
-    public void deleteMainTask(TaskId taskId) {
-        TaskWorkspace taskWorkspace = TaskWorkspace.of(directoryStructure, TaskCoordinate.of(taskId));
-        taskWorkspace.getMainTaskFileLocation(taskId).delete();
+    public void deleteMainTask(TaskCoordinate taskCoordinate) {
+        TaskWorkspace taskWorkspace = TaskWorkspace.of(directoryStructure, taskCoordinate);
+        taskWorkspace.getMainTaskFileLocation().delete();
         FileSystemUtils.deleteRecursively(taskWorkspace.getMainTaskDir());
     }
 
@@ -64,25 +65,27 @@ public class TaskService {
                 .build();
     }
 
-    public Task createSubTask(TaskId mainTaskId, String title) {
-        return this.createSubTask(mainTaskId, mainTaskId, title);
+    public TaskCoordinate createSubTask(TaskCoordinate taskCoordinate, String title) {
+        return this.createSubTask(taskCoordinate, taskCoordinate.getMainTaskId(), title);
     }
 
-    public Task createSubTask(TaskId mainTaskId, TaskId parentTaskId, String title) {
-        Task mainTask = taskRepository.fetch(mainTaskId);
+    public TaskCoordinate createSubTask(TaskCoordinate mainTaskCoordinate, TaskId parentTaskId, String title) {
+        Task mainTask = taskRepository.fetch(mainTaskCoordinate);
         Task parentTask = findSubTask(mainTask, parentTaskId);
         Task subTask = createTask(title);
         if (parentTask.getSubTasks() == null) {
             parentTask.setSubTasks(new ArrayList<>());
         }
         parentTask.getSubTasks().add(subTask);
-        taskRepository.store(mainTask);
+        taskRepository.store(mainTaskCoordinate, parentTask);
 
-        TaskWorkspace workspace = TaskWorkspace.of(directoryStructure, TaskCoordinate.of(mainTaskId, subTask.getId()));
+        TaskCoordinate subTaskCoordinate = TaskCoordinate.of(mainTaskCoordinate.getWorkSpaceName(), mainTaskCoordinate.getMainTaskId(), subTask.getId());
+
+        TaskWorkspace workspace = TaskWorkspace.of(directoryStructure, subTaskCoordinate);
         workspace.getSubTaskDir().mkdirs();
 
 
-        return subTask;
+        return subTaskCoordinate;
     }
 
     private Task findSubTask(Task task, TaskId taskId) {
@@ -107,31 +110,31 @@ public class TaskService {
 
 
     public void setDescription(TaskCoordinate taskCoordinate, String description) {
-        Task mainTask = taskRepository.fetch(taskCoordinate.getMainTaskId());
+        Task mainTask = taskRepository.fetch(taskCoordinate);
         Task task = findSubTask(mainTask, taskCoordinate.getSubTaskId());
         task.setDescription(description);
-        taskRepository.store(mainTask);
+        taskRepository.store(taskCoordinate, mainTask);
     }
 
     public void setAgentName(TaskCoordinate taskCoordinate, String agentName) {
-        Task mainTask = taskRepository.fetch(taskCoordinate.getMainTaskId());
+        Task mainTask = taskRepository.fetch(taskCoordinate);
         Task task = findSubTask(mainTask, taskCoordinate.getSubTaskId());
         task.setAgentName(agentName);
-        taskRepository.store(mainTask);
+        taskRepository.store(taskCoordinate, mainTask);
     }
 
 
-    public Task getSubTask(TaskId mainTaskId, TaskId taskId) {
-        Task mainTask = taskRepository.fetch(mainTaskId);
-        return findSubTask(mainTask, taskId);
+    public Task getSubTask(TaskCoordinate subTaskCoordinate) {
+        Task mainTask = taskRepository.fetch(subTaskCoordinate);
+        return findSubTask(mainTask, subTaskCoordinate.getSubTaskId());
     }
 
-    public List<TaskSummaryDTO> list() {
-        return taskRepository.getMainTaskSummaries();
+    public List<TaskSummaryDTO> list(String workSpaceName) {
+        return taskRepository.getMainTaskSummaries(TaskCoordinate.of(workSpaceName, null));
     }
 
-    public void updateTaskTitle(TaskId taskId, String title) {
-        taskRepository.updateTaskTitle(taskId, title);
+    public void updateTaskTitle(TaskCoordinate taskCoordinate, String title) {
+        taskRepository.updateTaskTitle(taskCoordinate, title);
     }
 
     public void updateSubTaskTitle(TaskCoordinate taskCoordinate, String title) {
@@ -147,7 +150,7 @@ public class TaskService {
     }
 
     private Agent getAgent(TaskCoordinate taskCoordinate) {
-        Task mainTask = getMainTask(taskCoordinate.getMainTaskId());
+        Task mainTask = getMainTask(taskCoordinate);
         Task subTask = findSubTask(mainTask, taskCoordinate.getSubTaskId());
         AgentId agentId = subTask.getAgentId();
         String agentName = subTask.getAgentName();
@@ -155,7 +158,7 @@ public class TaskService {
         if (agentId == null) {
             agentId = agentService.createAgent(agentName, taskCoordinate).getAgentCoordinate().getAgentId();
             subTask.setAgentId(agentId);
-            taskRepository.store(mainTask);
+            taskRepository.store(taskCoordinate, mainTask);
         }
         AgentCoordinate agentCoordinate = AgentCoordinate.of(taskCoordinate, agentId);
         return agentService.getAgent(agentCoordinate);
@@ -166,4 +169,9 @@ public class TaskService {
         getAgent(taskCoordinate).handleMessage(message);
     }
 
+    public List<String> getWorkSpaces() {
+        return directoryStructure.getWorkSpaces().keySet().stream()
+                .sorted()
+                .toList();
+    }
 }

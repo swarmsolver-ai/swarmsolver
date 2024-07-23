@@ -13,7 +13,7 @@ public class ToolsBeanFactory implements ScriptBeanFactory<ToolsBean> {
         this.toolService = toolService;
     }
 
-    public ToolsBean createInstance() {
+    public ToolsBean createInstance(String workSpaceName) {
         return new ToolsBean(toolService);
     }
 

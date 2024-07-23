@@ -7,6 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public class TaskCoordinate {
 
+    private String workSpaceName;
+
     private TaskId mainTaskId;
 
     private TaskId subTaskId;
@@ -14,12 +16,12 @@ public class TaskCoordinate {
     private TaskCoordinate() {
     }
 
-    static public TaskCoordinate of(TaskId mainTaskId, TaskId subTaskId) {
-        return new TaskCoordinate(mainTaskId, subTaskId);
+    static public TaskCoordinate of(String workSpaceName, TaskId mainTaskId, TaskId subTaskId) {
+        return new TaskCoordinate(workSpaceName, mainTaskId, subTaskId);
     }
 
 
-    static public TaskCoordinate of(TaskId mainTaskId) {
-        return new TaskCoordinate(mainTaskId, null);
+    static public TaskCoordinate of(String workSpaceName, TaskId mainTaskId) {
+        return new TaskCoordinate(workSpaceName, mainTaskId, null);
     }
 }

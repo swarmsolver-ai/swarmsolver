@@ -23,8 +23,8 @@ public class ConversationController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public StringArrayResult read(String mainTaskId, String subTaskId, String conversationId) {
-        TaskCoordinate taskCoordinate = TaskCoordinate.of(TaskId.of(mainTaskId), TaskId.of(subTaskId));
+    public StringArrayResult read(String workSpaceName, String mainTaskId, String subTaskId, String conversationId) {
+        TaskCoordinate taskCoordinate = TaskCoordinate.of(workSpaceName, TaskId.of(mainTaskId), TaskId.of(subTaskId));
         ConversationCoordinate conversationCoordinate = ConversationCoordinate.of(taskCoordinate, ConversationId.of(conversationId));
         return StringArrayResult.builder()
                 .content(conversationService.read(conversationCoordinate))

@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 @Slf4j
 @RunWith(SpringRunner.class)
@@ -26,20 +27,20 @@ abstract public class TestBase {
 
     @Before
     public void setUp() throws IOException {
-        File dataFolder = temporaryFolder.newFolder("data");
+        File workSpaceFolder = temporaryFolder.newFolder("workspace");
 
-        File configFolder = new File(dataFolder, "config");
+        File configFolder = new File(workSpaceFolder, "config");
         configFolder.mkdir();
 
-        File workspaceFolder = new File(dataFolder, "workspace");
-        workspaceFolder.mkdir();
+        File dataFolder = new File(workSpaceFolder, "data");
+        dataFolder.mkdir();
 
-        applicationProperties.setDataDir(dataFolder.getAbsolutePath());
-        log.info("======> data dir set to: " + applicationProperties.getDataDir());
+        applicationProperties.setWorkspaces(Map.of("default", workSpaceFolder.getAbsolutePath()));
+        log.info("======> workspace dir set to: " + applicationProperties.getWorkspaces().get("default"));
     }
 
     protected void printDirStructure(String stateDescription) {
-        DirectoryStructurePrinter.dumpWorkspaceState(new File(this.applicationProperties.getDataDir()), stateDescription);
+        DirectoryStructurePrinter.dumpWorkspaceState(new File(this.applicationProperties.getWorkspaces().get("default")), stateDescription);
     }
 
 }

@@ -4,6 +4,7 @@ import ai.swarmsolver.backend.app.ApplicationProperties;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.util.Map;
 
 @Component
 public class DirectoryStructure {
@@ -14,24 +15,20 @@ public class DirectoryStructure {
         this.applicationProperties = applicationProperties;
     }
 
-    public String getMainDir() {
-        return applicationProperties.getDataDir();
+    public String getWorkSpaceDir(String workspaceName) {
+        return applicationProperties.getWorkspaces().get(workspaceName);
     }
 
-    public String getConversationDir() {
-        return getMainDir() + File.separator + "conversations";
+    public String getConfigDir(String workspaceName) {
+        return getWorkSpaceDir(workspaceName) + File.separator + "config";
     }
 
-    public String getConfigDir() {
-        return getMainDir() + File.separator + "config";
+    public String getDataDir(String workspaceName) {
+        return getWorkSpaceDir(workspaceName) + File.separator + "data";
     }
 
-    public String getProjectsConfigFile() {
-        return getConfigDir() + File.separator + "projects.json";
-    }
-
-    public String getWorkspaceDir() {
-        return getMainDir() + File.separator + "workspace";
+    public Map<String, String> getWorkSpaces() {
+        return applicationProperties.getWorkspaces();
     }
 
 }

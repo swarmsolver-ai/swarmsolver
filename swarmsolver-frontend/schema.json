@@ -23,10 +23,6 @@
       "description": "Conversation Controller"
     },
     {
-      "name": "project-controller",
-      "description": "Project Controller"
-    },
-    {
       "name": "scripting-sandbox-controller",
       "description": "Scripting Sandbox Controller"
     },
@@ -48,6 +44,16 @@
         "summary": "read",
         "operationId": "readUsingGET",
         "parameters": [
+          {
+            "name": "workSpaceName",
+            "in": "query",
+            "description": "workSpaceName",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "mainTaskId",
             "in": "query",
@@ -144,39 +150,6 @@
         }
       }
     },
-    "/api/project": {
-      "get": {
-        "tags": [
-          "project-controller"
-        ],
-        "summary": "getAllProjects",
-        "operationId": "getAllProjectsUsingGET",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Project"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
     "/api/sandbox/script": {
       "post": {
         "tags": [
@@ -185,6 +158,16 @@
         "summary": "test",
         "operationId": "testUsingPOST",
         "parameters": [
+          {
+            "name": "workSpaceName",
+            "in": "query",
+            "description": "workSpaceName",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "fileName",
             "in": "query",
@@ -223,6 +206,16 @@
         "summary": "getAgent",
         "operationId": "getAgentUsingPOST",
         "parameters": [
+          {
+            "name": "workSpaceName",
+            "in": "query",
+            "description": "workSpaceName",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "mainTaskId",
             "in": "query",
@@ -279,6 +272,16 @@
         "operationId": "getMainTaskUsingGET",
         "parameters": [
           {
+            "name": "workSpaceName",
+            "in": "query",
+            "description": "workSpaceName",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "taskId",
             "in": "query",
             "description": "taskId",
@@ -318,6 +321,16 @@
         "summary": "createMainTask",
         "operationId": "createMainTaskUsingPOST",
         "parameters": [
+          {
+            "name": "workSpaceName",
+            "in": "query",
+            "description": "workSpaceName",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "title",
             "in": "query",
@@ -363,6 +376,16 @@
         "summary": "createSubTask",
         "operationId": "createSubTaskUsingPOST",
         "parameters": [
+          {
+            "name": "workSpaceName",
+            "in": "query",
+            "description": "workSpaceName",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "mainTaskId",
             "in": "query",
@@ -429,6 +452,16 @@
         "operationId": "updateSubTaskTitleUsingPUT",
         "parameters": [
           {
+            "name": "workSpaceName",
+            "in": "query",
+            "description": "workSpaceName",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "mainTaskId",
             "in": "query",
             "description": "mainTaskId",
@@ -487,6 +520,16 @@
         "operationId": "deleteTaskUsingPUT",
         "parameters": [
           {
+            "name": "workSpaceName",
+            "in": "query",
+            "description": "workSpaceName",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "taskId",
             "in": "query",
             "description": "taskId",
@@ -524,6 +567,16 @@
         "summary": "updateTaskTitle",
         "operationId": "updateTaskTitleUsingPUT",
         "parameters": [
+          {
+            "name": "workSpaceName",
+            "in": "query",
+            "description": "workSpaceName",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "taskId",
             "in": "query",
@@ -571,6 +624,18 @@
         ],
         "summary": "list",
         "operationId": "listUsingGET",
+        "parameters": [
+          {
+            "name": "workSpaceName",
+            "in": "query",
+            "description": "workSpaceName",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -619,6 +684,39 @@
           },
           "201": {
             "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/task/workspaces": {
+      "get": {
+        "tags": [
+          "task-controller"
+        ],
+        "summary": "getWorkSpaces",
+        "operationId": "getWorkSpacesUsingGET",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
@@ -710,18 +808,6 @@
           }
         }
       },
-      "Project": {
-        "title": "Project",
-        "type": "object",
-        "properties": {
-          "baseDir": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          }
-        }
-      },
       "SseEmitter": {
         "title": "SseEmitter",
         "type": "object",
@@ -788,6 +874,9 @@
           },
           "subTaskId": {
             "$ref": "#/components/schemas/TaskId"
+          },
+          "workSpaceName": {
+            "type": "string"
           }
         }
       },
@@ -873,6 +962,9 @@
             "type": "string"
           },
           "subTaskId": {
+            "type": "string"
+          },
+          "workSpaceName": {
             "type": "string"
           }
         }

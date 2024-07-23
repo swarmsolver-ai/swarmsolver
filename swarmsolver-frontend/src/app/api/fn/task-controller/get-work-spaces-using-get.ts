@@ -6,20 +6,13 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { TaskSummaryDto } from '../../models/task-summary-dto';
 
-export interface ListUsingGet$Params {
-
-/**
- * workSpaceName
- */
-  workSpaceName?: string;
+export interface GetWorkSpacesUsingGet$Params {
 }
 
-export function listUsingGet(http: HttpClient, rootUrl: string, params?: ListUsingGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<TaskSummaryDto>>> {
-  const rb = new RequestBuilder(rootUrl, listUsingGet.PATH, 'get');
+export function getWorkSpacesUsingGet(http: HttpClient, rootUrl: string, params?: GetWorkSpacesUsingGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<string>>> {
+  const rb = new RequestBuilder(rootUrl, getWorkSpacesUsingGet.PATH, 'get');
   if (params) {
-    rb.query('workSpaceName', params.workSpaceName, {"style":"form"});
   }
 
   return http.request(
@@ -27,9 +20,9 @@ export function listUsingGet(http: HttpClient, rootUrl: string, params?: ListUsi
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<TaskSummaryDto>>;
+      return r as StrictHttpResponse<Array<string>>;
     })
   );
 }
 
-listUsingGet.PATH = '/api/task/tasks';
+getWorkSpacesUsingGet.PATH = '/api/task/workspaces';

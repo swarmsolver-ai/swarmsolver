@@ -32,21 +32,21 @@ public class TaskRepository {
     }
 
     @SneakyThrows
-    public void store(Task task) {
-        TaskWorkspace taskWorkspace = TaskWorkspace.of(directoryStructure, TaskCoordinate.of(task.getId()));
-        objectMapper.writeValue(taskWorkspace.getMainTaskFileLocation(task.getId()), task);
+    public void store(TaskCoordinate taskCoordinate, Task task) {
+        TaskWorkspace taskWorkspace = TaskWorkspace.of(directoryStructure, taskCoordinate);
+        objectMapper.writeValue(taskWorkspace.getMainTaskFileLocation(), task);
     }
 
     @SneakyThrows
-    public Task fetch(TaskId id) {
-        TaskWorkspace taskWorkspace = TaskWorkspace.of(directoryStructure, TaskCoordinate.of(id));
-        return objectMapper.readValue(taskWorkspace.getMainTaskFileLocation(id), Task.class);
+    public Task fetch(TaskCoordinate taskCoordinate) {
+        TaskWorkspace taskWorkspace = TaskWorkspace.of(directoryStructure, taskCoordinate);
+        return objectMapper.readValue(taskWorkspace.getMainTaskFileLocation(), Task.class);
     }
 
 
     @SneakyThrows
-    public List<TaskSummaryDTO> getMainTaskSummaries() {
-        TaskWorkspace taskWorkspace = TaskWorkspace.of(directoryStructure);
+    public List<TaskSummaryDTO> getMainTaskSummaries(TaskCoordinate taskCoordinate) {
+        TaskWorkspace taskWorkspace = TaskWorkspace.of(directoryStructure, taskCoordinate);
 
         List<File> taskFiles = taskWorkspace.listMainTaskFileLocations();
 
@@ -77,17 +77,17 @@ public class TaskRepository {
         return null;
     }
 
-    public void updateTaskTitle(TaskId taskId, String title) {
-        Task task = fetch(taskId);
+    public void updateTaskTitle(TaskCoordinate taskCoordinate, String title) {
+        Task task = fetch(taskCoordinate);
         task.setTitle(title);
-        this.store(task);
+        this.store(taskCoordinate, task);
     }
 
     public void updateSubTaskTitle(TaskCoordinate taskCoordinate, String title) {
-        Task mainTask = fetch(taskCoordinate.getMainTaskId());
+        Task mainTask = fetch(taskCoordinate);
         Task subTask = findSubTask(mainTask, taskCoordinate.getSubTaskId());
         subTask.setTitle(title);
-        this.store(mainTask);
+        this.store(taskCoordinate, mainTask);
     }
 
 }

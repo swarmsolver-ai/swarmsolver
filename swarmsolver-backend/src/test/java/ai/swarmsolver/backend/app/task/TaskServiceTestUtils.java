@@ -16,16 +16,15 @@ public class TaskServiceTestUtils {
         this.taskService = taskService;
     }
 
-    public TaskId createMainTask() {
+    public TaskCoordinate createMainTask() {
         String main_task_name = "main-task-" + UUID.randomUUID();
-        return taskService.createMainTask(main_task_name).getId();
+        return taskService.createMainTask("default", main_task_name);
     }
 
     public TaskCoordinate createTaskWithSubTask() {
         String sub_task_name = "sub-task-" + UUID.randomUUID();
-        TaskId maintaskId = createMainTask();
-        TaskId subTaskId = taskService.createSubTask(maintaskId, maintaskId, sub_task_name).getId();
-        return TaskCoordinate.of(maintaskId, subTaskId);
+        TaskCoordinate mainTaskCoordinate = createMainTask();
+        return taskService.createSubTask(mainTaskCoordinate, sub_task_name);
     }
 
 

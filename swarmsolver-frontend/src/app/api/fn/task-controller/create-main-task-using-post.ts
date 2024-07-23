@@ -11,6 +11,11 @@ import { TaskId } from '../../models/task-id';
 export interface CreateMainTaskUsingPost$Params {
 
 /**
+ * workSpaceName
+ */
+  workSpaceName?: string;
+
+/**
  * title
  */
   title?: string;
@@ -19,6 +24,7 @@ export interface CreateMainTaskUsingPost$Params {
 export function createMainTaskUsingPost(http: HttpClient, rootUrl: string, params?: CreateMainTaskUsingPost$Params, context?: HttpContext): Observable<StrictHttpResponse<TaskId>> {
   const rb = new RequestBuilder(rootUrl, createMainTaskUsingPost.PATH, 'post');
   if (params) {
+    rb.query('workSpaceName', params.workSpaceName, {"style":"form"});
     rb.query('title', params.title, {"style":"form"});
   }
 

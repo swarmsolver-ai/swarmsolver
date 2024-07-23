@@ -6,6 +6,7 @@ import {Router} from "@angular/router";
 import {ModalService} from "../styleguide/modal/modal-service";
 import {TaskDialogComponentSpec, TaskDialogState} from "./task-dialog/task-dialog.component";
 import {ConfirmationDialogSpec} from "../styleguide/confirmation-dialog/confirmation-dialog.component";
+import {WorkSpaceService} from "../work-space.service";
 
 @Component({
   selector: 'app-task-overview-page',
@@ -15,10 +16,14 @@ import {ConfirmationDialogSpec} from "../styleguide/confirmation-dialog/confirma
 })
 export class TaskOverviewPageComponent implements OnInit {
 
-  constructor(private service: TaskOverviewService, private router: Router, private modalService: ModalService) {
+  constructor(private service: TaskOverviewService, private router: Router, private modalService: ModalService, private workSpaceService: WorkSpaceService) {
   }
 
   task$: Observable<TaskSummaryDto[]> = this.service.task$
+
+  workSpaces = this.workSpaceService.workSpaces
+
+  selectedWorkSpace = this.workSpaceService.selectedWorkSpace
 
   ngOnInit(): void {
     this.service.load()
@@ -118,4 +123,8 @@ export class TaskOverviewPageComponent implements OnInit {
   }
 
 
+  onSelectWorkSpace($event: Event) {
+    const selectElement = $event.target as HTMLSelectElement;
+    this.workSpaceService.selectWorkSpace(selectElement.value)
+  }
 }

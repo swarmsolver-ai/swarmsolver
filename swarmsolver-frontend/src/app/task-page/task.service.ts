@@ -6,6 +6,7 @@ import {TaskId} from "../api/models/task-id";
 import {AgentSummaryDto} from "../api/models/agent-summary-dto";
 import {map} from "rxjs/operators";
 import {HttpClient} from "@angular/common/http";
+import {WorkSpaceService} from "../work-space.service";
 
 interface TaskStoreState {
   task: Task | null
@@ -37,11 +38,13 @@ export class TaskService {
     distinctUntilChanged(),
   )
 
-  constructor(private taskControllerService: TaskControllerService, private httpClient: HttpClient) {
+  constructor(private taskControllerService: TaskControllerService, private workSpaceService: WorkSpaceService) {
   }
 
   openTask(mainTaskId: string) {
-    this.taskControllerService.getMainTaskUsingGet({taskId: mainTaskId}).subscribe(mainTask => {
+    this.taskControllerService.getMainTaskUsingGet({
+      workSpaceName: this.workSpaceService.selectedWorkSpace(),
+      taskId: mainTaskId}).subscribe(mainTask => {
       this.store.next({
         task: mainTask,
         selectedStep: null,
@@ -76,6 +79,7 @@ export class TaskService {
 
     if (mainTaskId && stepId) {
       this.taskControllerService.getAgentUsingPost({
+        workSpaceName: this.workSpaceService.selectedWorkSpace(),
         mainTaskId: mainTaskId.identifier,
         taskId: stepId.identifier
       }).subscribe(agent => {
@@ -90,17 +94,23 @@ export class TaskService {
 
 
   reloadTask(taskId: string) {
-    return this.taskControllerService.getMainTaskUsingGet({taskId}).subscribe(task => {
-      let state = this.store.value
-      this.store.next({
-        ...state,
-        task: task
+      return this.taskControllerService.getMainTaskUsingGet({
+        workSpaceName: this.workSpaceService.selectedWorkSpace(),
+        taskId
+      }).subscribe(task => {
+        let state = this.store.value
+        this.store.next({
+          ...state,
+          task: task
+        })
       })
-    })
-  }
+   }
 
   reloadTask$(taskId: string): Observable<Task> {
-    return this.taskControllerService.getMainTaskUsingGet({taskId}).pipe(
+    return this.taskControllerService.getMainTaskUsingGet({
+      workSpaceName: this.workSpaceService.selectedWorkSpace(),
+      taskId
+    }).pipe(
       map(task => {
         let state = this.store.value;
         this.store.next({
@@ -114,7 +124,12 @@ export class TaskService {
 
 
   addSubTask(mainTaskId: string, parentTaskId: string, description: string) {
-    this.taskControllerService.createSubTaskUsingPost({mainTaskId, parentTaskId, description}).subscribe(newTaskId => {
+    this.taskControllerService.createSubTaskUsingPost({
+      workSpaceName: this.workSpaceService.selectedWorkSpace(),
+      mainTaskId,
+      parentTaskId,
+      description
+    }).subscribe(newTaskId => {
       this.reloadTask$(mainTaskId).subscribe(task => {
         this.selectStep(newTaskId.identifier!)
       })
@@ -122,13 +137,20 @@ export class TaskService {
   }
 
   updateTaskTitle(taskId: TaskId, title: string) {
-    this.taskControllerService.updateTaskTitleUsingPut({taskId: taskId.identifier, title}).subscribe(value => {
+    this.taskControllerService.updateTaskTitleUsingPut({
+      workSpaceName: this.workSpaceService.selectedWorkSpace(),
+      taskId: taskId.identifier,
+      title
+    }).subscribe(value => {
       this.reloadTask(taskId.identifier!)
     })
   }
 
   updateSubTaskTitle(mainTaskId: string, subTaskId: string, title: string) {
-    this.taskControllerService.updateSubTaskTitleUsingPut({mainTaskId, subTaskId, title}).subscribe(value => {
+    this.taskControllerService.updateSubTaskTitleUsingPut({
+      workSpaceName: this.workSpaceService.selectedWorkSpace(),
+      mainTaskId, subTaskId, title
+    }).subscribe(value => {
       this.reloadTask(mainTaskId)
     })
   }
@@ -138,7 +160,14 @@ export class TaskService {
     let mainTaskId = state.task?.id!.identifier!
     let subTaskId = state.selectedStep?.id?.identifier!
     if (mainTaskId && subTaskId) {
-      this.taskControllerService.userMessageUsingPost({body: {mainTaskId, subTaskId, message}}).subscribe(value => {
+      this.taskControllerService.userMessageUsingPost({
+        body: {
+          workSpaceName: this.workSpaceService.selectedWorkSpace(),
+          mainTaskId,
+          subTaskId,
+          message
+        }
+      }).subscribe(value => {
         // this.reloadTask(mainTaskId)
       })
     }

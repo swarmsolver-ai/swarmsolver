@@ -20,11 +20,11 @@ public class ScriptingService {
     }
 
     @SneakyThrows
-    public Object runFile(String fileName) {
+    public Object runFile(String workSpaceName, String fileName) {
         Binding binding = new Binding();
 
         for(ScriptBeanFactory<?> beanFactory: beanFactories) {
-            binding.setVariable(beanFactory.beanName(), beanFactory.createInstance());
+            binding.setVariable(beanFactory.beanName(), beanFactory.createInstance(workSpaceName));
         }
 
         GroovyShell shell = new GroovyShell(this.getClass().getClassLoader(), binding);

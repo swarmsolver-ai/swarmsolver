@@ -14,8 +14,8 @@ public class KeysBeanFactory implements ScriptBeanFactory<KeysBean> {
     }
 
     @Override
-    public KeysBean createInstance() {
-        return new KeysBean(directoryStructure);
+    public KeysBean createInstance(String workSpaceName) {
+        return new KeysBean(workSpaceName, directoryStructure);
     }
 
     @Override

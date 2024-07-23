@@ -49,7 +49,7 @@ public class AgentService {
     }
 
     private <AC extends Agent, AS extends AgentSpecification<AC>> AC  createAgent(AgentState agentState) {
-        @SuppressWarnings("unchecked") AS agentSpecification = (AS) agentSpecificationRegistry.getSpecification(agentState.getAgentName());
+        @SuppressWarnings("unchecked") AS agentSpecification = (AS) agentSpecificationRegistry.getSpecification(agentState.getAgentCoordinate().getTaskCoordinate().getWorkSpaceName(), agentState.getAgentName());
         AgentFactory<AC, AS> agentFactory = agentFactoryRegistry.getFactory(agentSpecification.agentClass());
         AC agent = agentFactory.createAgent(agentSpecification, agentState);
         agentRepository.saveToCache(agent);
