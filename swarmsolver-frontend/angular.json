@@ -36,7 +36,8 @@
             "scripts": [
               "node_modules/preline/preline.js",
               "node_modules/prismjs/prism.js",
-              "node_modules/prismjs/components/prism-java.js"
+              "node_modules/prismjs/components/prism-java.js",
+              "node_modules/clipboard/dist/clipboard.js"
             ]
           },
           "configurations": {
