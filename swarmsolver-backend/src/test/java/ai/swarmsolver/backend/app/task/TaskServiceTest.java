@@ -1,13 +1,16 @@
 package ai.swarmsolver.backend.app.task;
 
+import ai.swarmsolver.backend.app.TestBase;
+import ai.swarmsolver.backend.app.task.dto.TaskSummaryDTO;
+import ai.swarmsolver.backend.app.task.model.Task;
 import ai.swarmsolver.backend.app.task.model.TaskCoordinate;
 import ai.swarmsolver.backend.app.task.service.TaskService;
-import ai.swarmsolver.backend.app.TestBase;
-import ai.swarmsolver.backend.app.task.model.Task;
-import ai.swarmsolver.backend.app.task.model.TaskId;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -22,7 +25,7 @@ public class TaskServiceTest extends TestBase {
     TaskServiceTestUtils taskStepDefs;
 
     String workSpaceName = "default";
-    
+
     @Test
     public void create() {
         // given a main  task name
@@ -39,6 +42,7 @@ public class TaskServiceTest extends TestBase {
         assertEquals(taskCoordinate.getMainTaskId(), task.getId());
         assertEquals(main_task_name, task.getTitle());
     }
+
     @Test
     public void editTask() {
         // given a main  task name
@@ -59,7 +63,7 @@ public class TaskServiceTest extends TestBase {
     @Test
     public void delete() {
         // given a main task
-        TaskCoordinate  taskC = taskStepDefs.createMainTask();
+        TaskCoordinate taskC = taskStepDefs.createMainTask();
 
         // when I delete it
         printDirStructure("task created");
@@ -135,7 +139,7 @@ public class TaskServiceTest extends TestBase {
     }
 
     @Test
-    public void setAgentName()  {
+    public void setAgentName() {
         // given a task with a subtask
         TaskCoordinate mainTaskCoordinate = taskStepDefs.createMainTask();
         TaskCoordinate subTaskCoordinate = taskService.createSubTask(mainTaskCoordinate, "subtask");
@@ -152,7 +156,7 @@ public class TaskServiceTest extends TestBase {
 
 
     @Test
-    public void sendMessage()  {
+    public void sendMessage() {
         // given a task with a subtask
         TaskCoordinate mainTaskCoordinate = taskStepDefs.createMainTask();
         TaskCoordinate subTaskCoordinate = taskService.createSubTask(mainTaskCoordinate, "subtask");
@@ -166,4 +170,24 @@ public class TaskServiceTest extends TestBase {
 
     }
 
+    @Test
+    public void sortByName() {
+        // given 10 random task names
+        List<String> randomNames = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            randomNames.add(UUID.randomUUID().toString());
+        }
+
+        // and I create tasks for each name
+        randomNames.forEach(name -> taskService.createMainTask("default", name));
+
+        // when I list the main tasks
+        List<TaskSummaryDTO> list = taskService.list("default");
+
+        // then  the summaries are ordered alphabetically by their titles
+        Collections.sort(randomNames);
+        for (int i = 0; i < randomNames.size(); i++) {
+            assertEquals(randomNames.get(i), list.get(i).getTitle());
+        }
+    }
 }

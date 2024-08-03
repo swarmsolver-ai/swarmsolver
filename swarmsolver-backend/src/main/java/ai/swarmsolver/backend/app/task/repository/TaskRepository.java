@@ -11,6 +11,7 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,6 +53,7 @@ public class TaskRepository {
 
         return taskFiles.stream()
                 .map(this::getSummary)
+                .sorted(Comparator.comparing(TaskSummaryDTO::getTitle))
                 .collect(Collectors.toList());
     }
 
