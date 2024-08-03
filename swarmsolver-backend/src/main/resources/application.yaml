@@ -4,8 +4,3 @@ spring:
   banner:
     location: classpath:/banner.txt
 
-ai.swarmsolver:
-  workspaces:
-    default: workspace
-    workspace2: workspace2
-    workspace3: workspace3
