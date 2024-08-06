@@ -20,7 +20,7 @@ export class ConversationContainerComponent {
   constructor(private service: TaskService) {}
 
   stepAdded($event: StepAddedEvent) {
-    this.service.addSubTask($event.taskId, $event.taskId, $event.stepName)
+    this.service.addSubTask($event.taskId, $event.taskId, $event.stepName, $event.agentName);
   }
 
 

@@ -23,8 +23,9 @@ public class TaskServiceTestUtils {
 
     public TaskCoordinate createTaskWithSubTask() {
         String sub_task_name = "sub-task-" + UUID.randomUUID();
+        String agentName = "agent-name";
         TaskCoordinate mainTaskCoordinate = createMainTask();
-        return taskService.createSubTask(mainTaskCoordinate, sub_task_name);
+        return taskService.createSubTask(mainTaskCoordinate, sub_task_name, agentName);
     }
 
 

@@ -4,10 +4,10 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
+import { AgentControllerService } from './services/agent-controller.service';
 import { ConversationControllerService } from './services/conversation-controller.service';
 import { ScriptingSandboxControllerService } from './services/scripting-sandbox-controller.service';
 import { TaskControllerService } from './services/task-controller.service';
-import { ToolControllerService } from './services/tool-controller.service';
 
 /**
  * Module that provides all services and configuration.
@@ -17,10 +17,10 @@ import { ToolControllerService } from './services/tool-controller.service';
   exports: [],
   declarations: [],
   providers: [
+    AgentControllerService,
     ConversationControllerService,
     ScriptingSandboxControllerService,
     TaskControllerService,
-    ToolControllerService,
     ApiConfiguration
   ],
 })

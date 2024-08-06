@@ -34,7 +34,7 @@ export class TaskPageComponent {
   }
 
   stepAdded($event: StepAddedEvent) {
-    this.service.addSubTask($event.taskId, $event.taskId, $event.stepName)
+    this.service.addSubTask($event.taskId, $event.taskId, $event.stepName, $event.agentName)
   }
 
 

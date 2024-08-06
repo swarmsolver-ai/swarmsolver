@@ -39,8 +39,9 @@ export interface ToolExecutionMessage {
 }
 
 export interface StepAddedEvent {
-  taskId: string,
+  taskId: string
   stepName: string
+  agentName: string
 }
 
 @Component({

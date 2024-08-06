@@ -81,9 +81,10 @@ public class TaskServiceTest extends TestBase {
 
         // and a subtask
         String sub_task_name = "sub-task-" + UUID.randomUUID();
+        String agent_name = "agent-name";
 
         // when I add a subtask directly to the main task, ie parent = main task
-        TaskCoordinate subTaskCoordinate = taskService.createSubTask(mainTaskCoordinate, sub_task_name);
+        TaskCoordinate subTaskCoordinate = taskService.createSubTask(mainTaskCoordinate, sub_task_name, agent_name);
         printDirStructure("subtask created");
 
         // then I can find the sub task via mainTaskId and walk the sub task tree
@@ -94,6 +95,7 @@ public class TaskServiceTest extends TestBase {
 
             Task subTask = task.getSubTasks().get(0);
             assertEquals(sub_task_name, subTask.getTitle());
+            assertEquals(agent_name, subTask.getAgentName());
         }
 
         // and I can find the sub task via mainTaskId and subTaskCoordinate
@@ -109,7 +111,7 @@ public class TaskServiceTest extends TestBase {
     public void setDescription() {
         // given a task
         TaskCoordinate mainTaskCoordinate = taskStepDefs.createMainTask();
-        TaskCoordinate taskCoordinate = taskService.createSubTask(mainTaskCoordinate, "subtask");
+        TaskCoordinate taskCoordinate = taskService.createSubTask(mainTaskCoordinate, "subtask", "agent-name");
         // when I set the description
         String description = "description-" + UUID.randomUUID();
         taskService.setDescription(taskCoordinate, description);
@@ -142,7 +144,7 @@ public class TaskServiceTest extends TestBase {
     public void setAgentName() {
         // given a task with a subtask
         TaskCoordinate mainTaskCoordinate = taskStepDefs.createMainTask();
-        TaskCoordinate subTaskCoordinate = taskService.createSubTask(mainTaskCoordinate, "subtask");
+        TaskCoordinate subTaskCoordinate = taskService.createSubTask(mainTaskCoordinate, "subtask", "agent-name");
 
         // when i set the agent name
         String agentName = "agent-name-" + UUID.randomUUID();
@@ -159,7 +161,7 @@ public class TaskServiceTest extends TestBase {
     public void sendMessage() {
         // given a task with a subtask
         TaskCoordinate mainTaskCoordinate = taskStepDefs.createMainTask();
-        TaskCoordinate subTaskCoordinate = taskService.createSubTask(mainTaskCoordinate, "subtask");
+        TaskCoordinate subTaskCoordinate = taskService.createSubTask(mainTaskCoordinate, "subtask", "agent-name");
 
         // given i set the agent name
         String agentName = "agent-name-" + UUID.randomUUID();

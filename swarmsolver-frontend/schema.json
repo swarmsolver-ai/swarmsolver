@@ -19,6 +19,10 @@
   ],
   "tags": [
     {
+      "name": "agent-controller",
+      "description": "Agent Controller"
+    },
+    {
       "name": "conversation-controller",
       "description": "Conversation Controller"
     },
@@ -29,13 +33,54 @@
     {
       "name": "task-controller",
       "description": "Task Controller"
-    },
-    {
-      "name": "tool-controller",
-      "description": "Tool Controller"
     }
   ],
   "paths": {
+    "/api/agent": {
+      "get": {
+        "tags": [
+          "agent-controller"
+        ],
+        "summary": "getAgentDescriptors",
+        "operationId": "getAgentDescriptorsUsingGET",
+        "parameters": [
+          {
+            "name": "workspaceName",
+            "in": "query",
+            "description": "workspaceName",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AgentDescriptorDTO"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
     "/api/conversation": {
       "get": {
         "tags": [
@@ -415,6 +460,16 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "agentName",
+            "in": "query",
+            "description": "agentName",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -729,43 +784,19 @@
           }
         }
       }
-    },
-    "/api/tools": {
-      "get": {
-        "tags": [
-          "tool-controller"
-        ],
-        "summary": "getAllTools",
-        "operationId": "getAllToolsUsingGET",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TooDescriptionDTO"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
     }
   },
   "components": {
     "schemas": {
+      "AgentDescriptorDTO": {
+        "title": "AgentDescriptorDTO",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
       "AgentId": {
         "title": "AgentId",
         "type": "object",
@@ -897,56 +928,6 @@
             "type": "string"
           },
           "title": {
-            "type": "string"
-          }
-        }
-      },
-      "TooDescriptionDTO": {
-        "title": "TooDescriptionDTO",
-        "type": "object",
-        "properties": {
-          "description": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "parameters": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ToolParameterDTO"
-            }
-          },
-          "returnType": {
-            "type": "string",
-            "enum": [
-              "SOURCE_CODE",
-              "TEXT"
-            ]
-          },
-          "returnTypeDetails": {
-            "type": "string"
-          }
-        }
-      },
-      "ToolParameterDTO": {
-        "title": "ToolParameterDTO",
-        "type": "object",
-        "properties": {
-          "description": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "parameterType": {
-            "type": "string",
-            "enum": [
-              "SOURCE_CODE",
-              "TEXT"
-            ]
-          },
-          "parameterTypeDetails": {
             "type": "string"
           }
         }

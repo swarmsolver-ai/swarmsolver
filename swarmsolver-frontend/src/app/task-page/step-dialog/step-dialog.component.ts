@@ -1,8 +1,10 @@
 import {Component, Input, SimpleChanges} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {WorkSpaceService} from "../../work-space.service";
 
 export interface StepDialogComponentData {
   name: string
+  agentName: string;
 }
 
 export interface StepDialogComponentSpec {
@@ -19,6 +21,10 @@ export interface StepDialogComponentSpec {
 })
 export class StepDialogComponent {
 
+  constructor(private workspaceService: WorkSpaceService) {}
+
+  agentNames = this.workspaceService.agentNames;
+
   @Input()
   spec: StepDialogComponentSpec | null = null;
 
@@ -32,17 +38,20 @@ export class StepDialogComponent {
   }
 
   formGroup: FormGroup = new FormGroup({
-    name: new FormControl(null, [Validators.required])
+    name: new FormControl(null, [Validators.required]),
+    agentName: new FormControl(null, [Validators.required]),
   })
 
   get nameControl(): FormControl {
     return <FormControl>this.formGroup.get('name')
   }
 
+  formValid() {
+    return this.formGroup.valid;
+  }
 
   confirm() {
     this.spec?.confirm(this.formGroup.value)
   }
-
 
 }

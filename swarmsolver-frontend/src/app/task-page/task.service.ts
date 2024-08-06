@@ -123,12 +123,14 @@ export class TaskService {
   }
 
 
-  addSubTask(mainTaskId: string, parentTaskId: string, description: string) {
+  addSubTask(mainTaskId: string, parentTaskId: string, description: string, agentName: string) {
     this.taskControllerService.createSubTaskUsingPost({
       workSpaceName: this.workSpaceService.selectedWorkSpace(),
       mainTaskId,
       parentTaskId,
-      description
+      description,
+      agentName
+
     }).subscribe(newTaskId => {
       this.reloadTask$(mainTaskId).subscribe(task => {
         this.selectStep(newTaskId.identifier!)

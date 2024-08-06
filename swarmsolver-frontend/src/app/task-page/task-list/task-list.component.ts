@@ -53,7 +53,7 @@ export class TaskListComponent {
   }
 
   private confirmAdd(data: StepDialogComponentData) {
-    this.stepAdded.emit(<StepAddedEvent>{ taskId: this.task.id!.identifier, stepName: data.name })
+    this.stepAdded.emit(<StepAddedEvent>{ taskId: this.task.id!.identifier, stepName: data.name, agentName: data.agentName })
   }
 
 

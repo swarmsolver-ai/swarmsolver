@@ -6,7 +6,10 @@ import ai.swarmsolver.backend.app.conversation.ConversationService;
 import ai.swarmsolver.backend.app.task.model.TaskCoordinate;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class AgentService {
@@ -56,4 +59,15 @@ public class AgentService {
         return agent;
     }
 
+    public List<AgentDescriptorDTO> list(String workspaceName) {
+        return agentSpecificationRegistry.getSpecifications(workspaceName).stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    private AgentDescriptorDTO toDTO(AgentSpecification<? extends Agent> agentSpecification) {
+        return AgentDescriptorDTO.builder()
+                .name(agentSpecification.getAgentName())
+                .build();
+    }
 }

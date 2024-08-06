@@ -29,6 +29,11 @@ export interface CreateSubTaskUsingPost$Params {
  * description
  */
   description?: string;
+
+/**
+ * agentName
+ */
+  agentName?: string;
 }
 
 export function createSubTaskUsingPost(http: HttpClient, rootUrl: string, params?: CreateSubTaskUsingPost$Params, context?: HttpContext): Observable<StrictHttpResponse<TaskId>> {
@@ -38,6 +43,7 @@ export function createSubTaskUsingPost(http: HttpClient, rootUrl: string, params
     rb.query('mainTaskId', params.mainTaskId, {"style":"form"});
     rb.query('parentTaskId', params.parentTaskId, {"style":"form"});
     rb.query('description', params.description, {"style":"form"});
+    rb.query('agentName', params.agentName, {"style":"form"});
   }
 
   return http.request(

@@ -65,14 +65,15 @@ public class TaskService {
                 .build();
     }
 
-    public TaskCoordinate createSubTask(TaskCoordinate taskCoordinate, String title) {
-        return this.createSubTask(taskCoordinate, taskCoordinate.getMainTaskId(), title);
+    public TaskCoordinate createSubTask(TaskCoordinate taskCoordinate, String title, String agentName) {
+        return this.createSubTask(taskCoordinate, taskCoordinate.getMainTaskId(), title, agentName);
     }
 
-    public TaskCoordinate createSubTask(TaskCoordinate mainTaskCoordinate, TaskId parentTaskId, String title) {
+    public TaskCoordinate createSubTask(TaskCoordinate mainTaskCoordinate, TaskId parentTaskId, String title, String agentName) {
         Task mainTask = taskRepository.fetch(mainTaskCoordinate);
         Task parentTask = findSubTask(mainTask, parentTaskId);
         Task subTask = createTask(title);
+        subTask.setAgentName(agentName);
         if (parentTask.getSubTasks() == null) {
             parentTask.setSubTasks(new ArrayList<>());
         }

@@ -11,6 +11,8 @@ import java.util.List;
 @Getter
 public class LangChain4jAgentSpecification implements AgentSpecification<LangChain4jAgent> {
 
+    public String agentName;
+
     @Override
     public Class<LangChain4jAgent> agentClass() {
         return LangChain4jAgent.class;

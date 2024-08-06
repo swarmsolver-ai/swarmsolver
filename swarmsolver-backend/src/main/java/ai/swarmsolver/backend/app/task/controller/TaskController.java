@@ -48,9 +48,9 @@ public class TaskController {
     }
 
     @PostMapping(value = "/subtask", produces = MediaType.APPLICATION_JSON_VALUE)
-    public TaskId createSubTask(String workSpaceName, String mainTaskId, String parentTaskId, String description) {
+    public TaskId createSubTask(String workSpaceName, String mainTaskId, String parentTaskId, String description, String agentName) {
         TaskCoordinate mainTaskCoordinate = TaskCoordinate.of(workSpaceName, TaskId.of(mainTaskId));
-        return taskService.createSubTask(mainTaskCoordinate, TaskId.of(parentTaskId), description).getSubTaskId();
+        return taskService.createSubTask(mainTaskCoordinate, TaskId.of(parentTaskId), description, agentName).getSubTaskId();
     }
 
     @GetMapping(value = "/maintask", produces = MediaType.APPLICATION_JSON_VALUE)
