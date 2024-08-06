@@ -10,8 +10,12 @@ interface Message {
   messageType: 'USER_MESSAGE' | 'AGENT_MESSAGE' | 'TOOL_EXECUTION_MESSAGE'
 }
 
-interface UserMessageBody {
+interface UserMessageBodyContents {
   text: string
+}
+
+interface UserMessageBody {
+  contents: UserMessageBodyContents[]
 }
 
 interface AgentToolExecutionRequest {

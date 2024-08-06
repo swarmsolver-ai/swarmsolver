@@ -8,8 +8,6 @@ import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.output.Response;
 import ai.swarmsolver.backend.app.agent.domain.*;
 import ai.swarmsolver.backend.app.conversation.ConversationCoordinate;
-import ai.swarmsolver.backend.app.tool.model.ToolExecutor;
-import ai.swarmsolver.backend.app.tool.service.ToolService;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,8 +24,6 @@ public class LangChain4jAgent implements Agent {
 
     private final List<ToolSpecification> tools;
 
-    private final ToolService toolService;
-
     private final AgentState agentState;
 
     private final AgentConversationAccess conversationAccess;
@@ -35,7 +31,7 @@ public class LangChain4jAgent implements Agent {
     private final AgentPersistenceAccess persistenceAccess;
 
     @Builder
-    public LangChain4jAgent(ChatLanguageModel languageModel, ChatMemory chatMemory, String systemMessage, AgentState agentState, AgentConversationAccess conversationAccess, AgentPersistenceAccess persistenceAccess, List<ToolSpecification> tools, ToolService toolService) {
+    public LangChain4jAgent(ChatLanguageModel languageModel, ChatMemory chatMemory, String systemMessage, AgentState agentState, AgentConversationAccess conversationAccess, AgentPersistenceAccess persistenceAccess, List<ToolSpecification> tools) {
         this.chatLanguageModel = languageModel;
         this.chatMemory = chatMemory;
         this.agentState = agentState;
@@ -43,7 +39,6 @@ public class LangChain4jAgent implements Agent {
         this.conversationAccess = conversationAccess;
         this.persistenceAccess = persistenceAccess;
         this.tools = tools;
-        this.toolService = toolService;
     }
 
     @Override
@@ -87,22 +82,25 @@ public class LangChain4jAgent implements Agent {
             chatMemory.add(response.content());
             conversationAccess.logAiMessageResponse(getConversationCoordinate(), response);
 
-            ToolExecutionRequest toolExecutionRequest = (response.content()).toolExecutionRequest();
-            if (toolExecutionRequest == null) {
+            List<ToolExecutionRequest> toolExecutionRequests = (response.content()).toolExecutionRequests();
+            if (toolExecutionRequests == null) {
                 // log.info(response.content().text());
                 return;
             }
-            ToolExecutionResultMessage toolExecutionResultMessage = executeTool(toolExecutionRequest);
-            conversationAccess.logToolExecutionResultMessage(getConversationCoordinate(), toolExecutionResultMessage);;
-            chatMemory.add(toolExecutionResultMessage);
+            for(ToolExecutionRequest toolExecutionRequest: toolExecutionRequests) {
+                ToolExecutionResultMessage toolExecutionResultMessage = executeTool(toolExecutionRequest);
+                conversationAccess.logToolExecutionResultMessage(getConversationCoordinate(), toolExecutionResultMessage);
+                chatMemory.add(toolExecutionResultMessage);
+            }
             count++;
         }
     }
 
     private ToolExecutionResultMessage executeTool(ToolExecutionRequest toolExecutionRequest) {
-        ToolExecutor toolExecutor = toolService.getToolExecutor(toolExecutionRequest.name());
-        String toolExecutionResult = toolExecutor.execute(toolExecutionRequest);
-        return ToolExecutionResultMessage.toolExecutionResultMessage(toolExecutionRequest.name(), toolExecutionResult);
+        // ToolExecutor toolExecutor = toolService.getToolExecutor(toolExecutionRequest.name());
+        // String toolExecutionResult = toolExecutor.execute(toolExecutionRequest);
+        log.info("toolExecutionRequest: "+ toolExecutionRequest);
+        return ToolExecutionResultMessage.toolExecutionResultMessage(toolExecutionRequest, "25");
     }
 
 }

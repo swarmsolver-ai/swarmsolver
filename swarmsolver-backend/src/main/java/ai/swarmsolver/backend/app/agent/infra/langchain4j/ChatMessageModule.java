@@ -36,8 +36,9 @@ class ChatMessageDeserializer extends StdDeserializer<ChatMessage> {
             case "AI":
                 return new AiMessage(text);
             case "TOOL_EXECUTION_RESULT":
+                String id = node.get("id").asText();
                 String toolName = node.get("toolName").asText();
-                return new ToolExecutionResultMessage(toolName, text);
+                return new ToolExecutionResultMessage(id, toolName, text);
             default:
                 throw new IllegalArgumentException("Unknown message type: " + type);
         }
@@ -67,7 +68,7 @@ class UserMessageSerializer extends StdSerializer<UserMessage> {
         gen.writeStartObject();
         gen.writeStringField("type", "USER");
         gen.writeStringField("name", value.name());
-        gen.writeStringField("text", value.text());
+        gen.writeStringField("text", value.singleText());
         gen.writeEndObject();
     }
 }
