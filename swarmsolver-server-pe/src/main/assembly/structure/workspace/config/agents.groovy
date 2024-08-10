@@ -1,8 +1,11 @@
 import ai.swarmsolver.backend.app.agent.infra.langchain4j.*;
 import dev.langchain4j.model.openai.OpenAiChatModel;
+import dev.langchain4j.model.anthropic.AnthropicChatModel;
 import java.time.Duration;
 
-def chatModelSupplier = {
+// Open AI agent specification
+
+def openAIChatModel = {
     Duration timeoutDuration = Duration.ofSeconds(60);
     OpenAiChatModel chatModel = OpenAiChatModel.builder()
             .apiKey(keys.getKey('OPENAI_API_KEY'))
@@ -10,6 +13,19 @@ def chatModelSupplier = {
             .build();
 } as ChatModelSupplier
 
-def agentSpecification = new LangChain4jAgentSpecification(chatModelSupplier, "java developer")
+def openAIAgent = new LangChain4jAgentSpecification("OpenAI Agent", openAIChatModel, "java developer", null)
 
-agentSpecification
+// Anthropic (Claude) agent specification
+
+def anthropicModel = {
+    Duration timeoutDuration = Duration.ofSeconds(60);
+    AnthropicChatModel chatModel = AnthropicChatModel.builder()
+            .apiKey(keys.getKey('ANTHROPIC_API_KEY'))
+            .timeout(timeoutDuration)
+            .build();
+} as ChatModelSupplier
+
+def anthropicAgent = new LangChain4jAgentSpecification("Claude Agent", anthropicModel, "java developer", null)
+
+// return agent specifications
+[openAIAgent, anthropicAgent]
