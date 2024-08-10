@@ -32,7 +32,7 @@ export class TaskOverviewPageComponent implements OnInit {
   openClicked($event: Event, task: TaskSummaryDto) {
     $event.preventDefault();
     if (task && task.id) {
-      this.router.navigate(['fe','task', task.id]);
+      this.router.navigate(['fe','task', this.selectedWorkSpace(), task.id]);
     }
   }
 

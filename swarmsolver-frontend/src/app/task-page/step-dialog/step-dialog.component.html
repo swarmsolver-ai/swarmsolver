@@ -1,14 +1,21 @@
 <app-dialog [title]="'Add Step'" (cancel)="cancel()" (confirm)="confirm()" [complete]="formValid()">
   <div class="max-w-sm space-y-3">
     <form [formGroup]="formGroup">
-      <input formControlName="name"
-             type="text"
-             class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-             placeholder="Enter a Step Name">
-      <select formControlName="agentName" class="py-3 px-4 pe-9 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
-        <option selected="">Select workspace</option>
-        <option *ngFor="let agentName of agentNames()">{{agentName}}</option>
-      </select>
+      <div>
+        <label class="block mb-2 text-sm text-gray-700 font-medium dark:text-white">Step Name</label>
+        <input formControlName="name"
+               type="text"
+               class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+               placeholder="Enter a Step Name">
+      </div>
+      <div>
+        <label class="block mb-2 text-sm text-gray-700 font-medium dark:text-white">Agent</label>
+        <select formControlName="agentName"
+                class="py-3 px-4 pe-9 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
+          <option selected="">Select agent</option>
+          <option *ngFor="let agentName of agentNames()">{{ agentName }}</option>
+        </select>
+      </div>
     </form>
   </div>
 </app-dialog>
