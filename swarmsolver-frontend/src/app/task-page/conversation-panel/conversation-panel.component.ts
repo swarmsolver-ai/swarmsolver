@@ -18,14 +18,14 @@ interface UserMessageBody {
   contents: UserMessageBodyContents[]
 }
 
-interface AgentToolExecutionRequest {
+export interface AgentToolExecutionRequest {
   name: string
   arguments: string
 }
 
 export interface AgentMessageContent {
   text: string
-  toolExecutionRequest: AgentToolExecutionRequest
+  toolExecutionRequests: AgentToolExecutionRequest[]
 }
 
 export interface AgentMessage {

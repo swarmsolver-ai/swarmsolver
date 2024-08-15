@@ -22,5 +22,5 @@ public class LangChain4jAgentSpecification implements AgentSpecification<LangCha
 
     private String systemMessage;
 
-    private List<ToolSpecification> toolSpecifications;
+    private List<Object> toolSpecifications;
 }

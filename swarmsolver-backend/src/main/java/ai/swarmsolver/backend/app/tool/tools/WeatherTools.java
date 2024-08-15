@@ -12,7 +12,7 @@ public class WeatherTools {
             @P("The city for which the weather forecast should be returned") String city,
             @P("The hour between 0 and 23") Integer hour
     ) {
-        return String.format("The weather tomorrow in %s at %n hour is  %n °C", city, hour, simulateTemperature(hour));
+        return String.format("The weather tomorrow in %s at %s hour is  %s °C", city, hour, simulateTemperature(hour));
     }
 
 
@@ -30,7 +30,7 @@ public class WeatherTools {
 
         double temperature = amplitude * Math.sin(Math.toRadians(15 * (hour - 6))) + averageTemp;
 
-        return temperature;
+        return Math.round(temperature * 10) / 10.0;
     }
 
 

@@ -2,12 +2,14 @@ package ai.swarmsolver.backend.app.agent.infra.langchain4j;
 
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
 import dev.langchain4j.agent.tool.ToolSpecification;
+import dev.langchain4j.agent.tool.ToolSpecifications;
 import dev.langchain4j.data.message.*;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.output.Response;
 import ai.swarmsolver.backend.app.agent.domain.*;
 import ai.swarmsolver.backend.app.conversation.ConversationCoordinate;
+import dev.langchain4j.service.tool.ToolExecutor;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,7 +24,7 @@ public class LangChain4jAgent implements Agent {
 
     private final String systemMessage;
 
-    private final List<ToolSpecification> tools;
+    private final List<Object> tools;
 
     private final AgentState agentState;
 
@@ -31,7 +33,7 @@ public class LangChain4jAgent implements Agent {
     private final AgentPersistenceAccess persistenceAccess;
 
     @Builder
-    public LangChain4jAgent(ChatLanguageModel languageModel, ChatMemory chatMemory, String systemMessage, AgentState agentState, AgentConversationAccess conversationAccess, AgentPersistenceAccess persistenceAccess, List<ToolSpecification> tools) {
+    public LangChain4jAgent(ChatLanguageModel languageModel, ChatMemory chatMemory, String systemMessage, AgentState agentState, AgentConversationAccess conversationAccess, AgentPersistenceAccess persistenceAccess, List<Object> tools) {
         this.chatLanguageModel = languageModel;
         this.chatMemory = chatMemory;
         this.agentState = agentState;
@@ -60,8 +62,13 @@ public class LangChain4jAgent implements Agent {
         run();
     }
 
+    private ToolManager toolManager;
 
     private void initIfNeeded() {
+        if (tools != null) {
+            toolManager = new ToolManager(tools);
+        }
+
         if (!agentState.isInitialized()) {
             addSystemMessage();
             agentState.setInitialized(true);
@@ -78,13 +85,12 @@ public class LangChain4jAgent implements Agent {
     private void run() {
         int count = 0;
         while(count < 5) {
-            Response<AiMessage> response =  chatLanguageModel.generate(chatMemory.messages(), tools);
+            Response<AiMessage> response =  chatLanguageModel.generate(chatMemory.messages(), toolManager != null? toolManager.getToolSpecifications() : null);
             chatMemory.add(response.content());
             conversationAccess.logAiMessageResponse(getConversationCoordinate(), response);
 
             List<ToolExecutionRequest> toolExecutionRequests = (response.content()).toolExecutionRequests();
             if (toolExecutionRequests == null) {
-                // log.info(response.content().text());
                 return;
             }
             for(ToolExecutionRequest toolExecutionRequest: toolExecutionRequests) {
@@ -97,10 +103,8 @@ public class LangChain4jAgent implements Agent {
     }
 
     private ToolExecutionResultMessage executeTool(ToolExecutionRequest toolExecutionRequest) {
-        // ToolExecutor toolExecutor = toolService.getToolExecutor(toolExecutionRequest.name());
-        // String toolExecutionResult = toolExecutor.execute(toolExecutionRequest);
-        log.info("toolExecutionRequest: "+ toolExecutionRequest);
-        return ToolExecutionResultMessage.toolExecutionResultMessage(toolExecutionRequest, "25");
+        String toolExecutionResult  = toolManager.execute(toolExecutionRequest);
+        return ToolExecutionResultMessage.toolExecutionResultMessage(toolExecutionRequest, toolExecutionResult);
     }
 
 }
