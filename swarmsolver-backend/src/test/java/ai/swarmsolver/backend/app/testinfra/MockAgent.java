@@ -1,11 +1,10 @@
 package ai.swarmsolver.backend.app.testinfra;
 
-import dev.langchain4j.data.message.UserMessage;
 import ai.swarmsolver.backend.app.agent.domain.*;
+import ai.swarmsolver.backend.app.agent.domain.message.AgentMessage;
 import ai.swarmsolver.backend.app.conversation.ConversationCoordinate;
-import ai.swarmsolver.backend.app.task.repository.TaskWorkspace;
+import dev.langchain4j.data.message.UserMessage;
 import lombok.Builder;
-import lombok.Getter;
 
 @Builder
 public class MockAgent implements Agent {
@@ -28,9 +27,9 @@ public class MockAgent implements Agent {
 
 
     @Override
-    public void handleMessage(String message) {
+    public void handleMessage(AgentMessage message) {
         initIfNeeded();
-        UserMessage userMessage = new UserMessage(message);
+        UserMessage userMessage = new UserMessage(message.getText());
         conversationAccess.logUserMessage(getConversationCoordinate(), userMessage);
     }
     private void initIfNeeded() {

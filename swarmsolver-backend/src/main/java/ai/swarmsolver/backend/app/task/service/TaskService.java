@@ -2,9 +2,8 @@ package ai.swarmsolver.backend.app.task.service;
 
 import ai.swarmsolver.backend.app.agent.app.AgentService;
 import ai.swarmsolver.backend.app.agent.app.AgentSummaryDTO;
-import ai.swarmsolver.backend.app.agent.domain.Agent;
 import ai.swarmsolver.backend.app.agent.domain.AgentCoordinate;
-import ai.swarmsolver.backend.app.agent.domain.AgentId;
+import ai.swarmsolver.backend.app.agent.domain.message.AgentMessage;
 import ai.swarmsolver.backend.app.task.dto.TaskSummaryDTO;
 import ai.swarmsolver.backend.app.task.model.Task;
 import ai.swarmsolver.backend.app.task.model.TaskCoordinate;
@@ -143,31 +142,28 @@ public class TaskService {
     }
 
     public AgentSummaryDTO getAgentSummary(TaskCoordinate taskCoordinate) {
-        Agent agent = getAgent(taskCoordinate);
-        return AgentSummaryDTO.builder()
-                .agentId(agent.getAgentCoordinate().getAgentId())
-                .conversationCoordinate(agent.getConversationCoordinate())
-                .build();
+        AgentCoordinate agentCoordinate = getAgentCoordinate(taskCoordinate);
+        return agentService.getAgentSummary(agentCoordinate);
     }
 
-    private Agent getAgent(TaskCoordinate taskCoordinate) {
+    private AgentCoordinate getAgentCoordinate(TaskCoordinate taskCoordinate) {
         Task mainTask = getMainTask(taskCoordinate);
         Task subTask = findSubTask(mainTask, taskCoordinate.getSubTaskId());
-        AgentId agentId = subTask.getAgentId();
-        String agentName = subTask.getAgentName();
-
-        if (agentId == null) {
-            agentId = agentService.createAgent(agentName, taskCoordinate).getAgentCoordinate().getAgentId();
-            subTask.setAgentId(agentId);
+        AgentCoordinate agentCoordinate;
+        if (subTask.getAgentId() == null) {
+            agentCoordinate = agentService.createAgent(subTask.getAgentName(), taskCoordinate);
+            subTask.setAgentId(agentCoordinate.getAgentId());
             taskRepository.store(taskCoordinate, mainTask);
+        } else {
+            agentCoordinate = AgentCoordinate.of(taskCoordinate, subTask.getAgentId());
         }
-        AgentCoordinate agentCoordinate = AgentCoordinate.of(taskCoordinate, agentId);
-        return agentService.getAgent(agentCoordinate);
+        return agentCoordinate;
     }
 
     @Async
     public void userMessage(TaskCoordinate taskCoordinate, String message) {
-        getAgent(taskCoordinate).handleMessage(message);
+        AgentCoordinate agentCoordinate = getAgentCoordinate(taskCoordinate);
+        agentService.handleMessage(AgentMessage.ofUserToAgent(agentCoordinate, message));
     }
 
     public List<String> getWorkSpaces() {

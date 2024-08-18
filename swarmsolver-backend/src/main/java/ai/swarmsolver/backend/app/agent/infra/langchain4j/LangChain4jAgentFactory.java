@@ -6,6 +6,9 @@ import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class LangChain4jAgentFactory implements AgentFactory<LangChain4jAgent, LangChain4jAgentSpecification> {
 
@@ -29,6 +32,12 @@ public class LangChain4jAgentFactory implements AgentFactory<LangChain4jAgent, L
     @Override
     public LangChain4jAgent createAgent(LangChain4jAgentSpecification agentSpecification, AgentState agentState) {
 
+        List<Object> tools = new ArrayList<>();
+        tools.add(new UserProxy());
+        if (agentSpecification.getToolSpecifications() != null) {
+            tools.addAll(agentSpecification.getToolSpecifications());
+        }
+
         AgentCoordinate agentCoordinate = agentState.getAgentCoordinate();
         MessageWindowChatMemory chatMemory = new MessageWindowChatMemory.Builder()
             .chatMemoryStore(fileSystemMessageStore)
@@ -42,7 +51,7 @@ public class LangChain4jAgentFactory implements AgentFactory<LangChain4jAgent, L
                 .languageModel(languageModel)
                 .chatMemory(chatMemory)
                 .systemMessage(agentSpecification.getSystemMessage())
-                .tools(agentSpecification.getToolSpecifications())
+                .tools(tools)
                 .agentState(agentState)
                 .conversationAccess(conversationAccess)
                 .persistenceAccess(persistenceAccess)

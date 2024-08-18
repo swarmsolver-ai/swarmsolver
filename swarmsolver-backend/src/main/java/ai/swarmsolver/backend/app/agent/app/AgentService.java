@@ -1,12 +1,12 @@
 package ai.swarmsolver.backend.app.agent.app;
 
 import ai.swarmsolver.backend.app.agent.domain.*;
+import ai.swarmsolver.backend.app.agent.domain.message.AgentMessage;
 import ai.swarmsolver.backend.app.conversation.ConversationCoordinate;
 import ai.swarmsolver.backend.app.conversation.ConversationService;
 import ai.swarmsolver.backend.app.task.model.TaskCoordinate;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -38,7 +38,7 @@ public class AgentService {
         return agent;
     }
 
-    public Agent createAgent(String agentName, TaskCoordinate taskCoordinate) {
+    public AgentCoordinate createAgent(String agentName, TaskCoordinate taskCoordinate) {
         AgentId newAgentId = AgentId.of("agent-"+UUID.randomUUID());
         AgentCoordinate agentCoordinate = AgentCoordinate.of(taskCoordinate, newAgentId);
         ConversationCoordinate conversationCoordinate = conversationService.initConversation(taskCoordinate);
@@ -48,7 +48,7 @@ public class AgentService {
                 .conversationCoordinate(conversationCoordinate)
                 .build();
         agentRepository.writeState(agentCoordinate, agentState);
-        return createAgent(agentState);
+        return agentCoordinate;
     }
 
     private <AC extends Agent, AS extends AgentSpecification<AC>> AC  createAgent(AgentState agentState) {
@@ -69,5 +69,18 @@ public class AgentService {
         return AgentDescriptorDTO.builder()
                 .name(agentSpecification.getAgentName())
                 .build();
+    }
+
+    public AgentSummaryDTO getAgentSummary(AgentCoordinate agentCoordinate) {
+        AgentState agentState = this.agentRepository.readState(agentCoordinate);
+        ConversationCoordinate conversationCoordinate = ConversationCoordinate.of(agentCoordinate.getTaskCoordinate(), agentState.getConversationCoordinate().getConversationId());
+        return AgentSummaryDTO.builder()
+                .agentId(agentCoordinate.getAgentId())
+                .conversationCoordinate(conversationCoordinate)
+                .build();
+    }
+
+    public void handleMessage(AgentMessage message) {
+        getAgent(message.getTo().getAgentCoordinate()).handleMessage(message);
     }
 }
