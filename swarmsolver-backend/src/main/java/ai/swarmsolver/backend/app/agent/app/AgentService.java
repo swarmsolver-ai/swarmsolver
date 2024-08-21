@@ -5,6 +5,8 @@ import ai.swarmsolver.backend.app.agent.domain.message.AgentMessage;
 import ai.swarmsolver.backend.app.conversation.ConversationCoordinate;
 import ai.swarmsolver.backend.app.conversation.ConversationService;
 import ai.swarmsolver.backend.app.task.model.TaskCoordinate;
+import ai.swarmsolver.backend.app.task.repository.TaskWorkspace;
+import ai.swarmsolver.backend.infra.DirectoryStructure;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,6 +43,7 @@ public class AgentService {
     public AgentCoordinate createAgent(String agentName, TaskCoordinate taskCoordinate) {
         AgentId newAgentId = AgentId.of("agent-"+UUID.randomUUID());
         AgentCoordinate agentCoordinate = AgentCoordinate.of(taskCoordinate, newAgentId);
+
         ConversationCoordinate conversationCoordinate = conversationService.initConversation(taskCoordinate);
         AgentState agentState = AgentState.builder()
                 .agentName(agentName)

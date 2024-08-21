@@ -86,7 +86,8 @@ public class LangChain4jAgent implements Agent {
     }
 
     private void addSystemMessage() {
-        if (agentState.getSystemMessage() != null) {
+        log.info("system message in agent: " + systemMessage);
+        if (systemMessage != null) {
             chatMemory.add(new SystemMessage(systemMessage));
         }
     }

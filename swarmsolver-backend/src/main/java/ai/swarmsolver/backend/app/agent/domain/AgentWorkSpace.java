@@ -32,4 +32,7 @@ public class AgentWorkSpace {
     }
 
 
+    public File getResourceFile(String resourceName) {
+        return new File(taskWorkspace.getSubTaskDir(), String.format("resource-%s.txt", resourceName));
+    }
 }
