@@ -1,17 +1,22 @@
-package ai.swarmsolver.backend.app.tool.tools;
+package ai.swarmsolver.backend.app.agent.infra.langchain4j.tools;
+
+import dev.langchain4j.agent.tool.P;
+import dev.langchain4j.agent.tool.Tool;
 
 import java.io.File;
 import java.util.Optional;
 
-public class FileLocationAction {
-    private final String baseDir;
+public class FileLocationTool extends AbstractFileTool  {
 
-    public FileLocationAction(String baseDir) {
-        this.baseDir = baseDir;
+    public FileLocationTool(FileToolSettings fileToolSettings) {
+        super(fileToolSettings);
+        if (fileToolSettings == null) throw new IllegalArgumentException("error in FileLocationTool. fileToolSettings is required");
+        if (fileToolSettings.getBaseDir() == null) throw new IllegalArgumentException("error in FileLocationTool. baseDir is required");
     }
 
-    public String find(String fileName) {
-        File baseDirectory = new File(baseDir);
+    @Tool("find the full path to a file by file name, e.g. file.txt will return /path/to/file.txt. if not found will return NOT FOUND")
+    public String find(@P("the name of the file e.g. file.txt") String fileName) {
+        File baseDirectory = new File(fileToolSettings.getBaseDir());
         return recursiveSearchFile(baseDirectory, fileName)
                 .orElse(fileName + " NOT FOUND");
     }
@@ -28,7 +33,7 @@ public class FileLocationAction {
                     }
                 } else if (file.getName().equals(fileName)) {
                     // File found
-                    return Optional.of(getRelativePath(baseDir, file.getAbsolutePath()));
+                    return Optional.of(getRelativePath(fileToolSettings.getBaseDir(), file.getAbsolutePath()));
                 }
             }
         }

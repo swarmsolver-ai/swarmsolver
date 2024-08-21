@@ -1,6 +1,7 @@
 package ai.swarmsolver.backend.app.agent.infra.langchain4j;
 
 import ai.swarmsolver.backend.app.agent.domain.*;
+import ai.swarmsolver.backend.app.agent.infra.langchain4j.tools.UserProxyTool;
 import ai.swarmsolver.backend.app.agent.infra.persistence.AgentPersistenceAccessImpl;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
@@ -33,7 +34,7 @@ public class LangChain4jAgentFactory implements AgentFactory<LangChain4jAgent, L
     public LangChain4jAgent createAgent(LangChain4jAgentSpecification agentSpecification, AgentState agentState) {
 
         List<Object> tools = new ArrayList<>();
-        tools.add(new UserProxy());
+        tools.add(new UserProxyTool());
         if (agentSpecification.getToolSpecifications() != null) {
             tools.addAll(agentSpecification.getToolSpecifications());
         }

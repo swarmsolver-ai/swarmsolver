@@ -1,4 +1,4 @@
-package ai.swarmsolver.backend.app.tool.tools;
+package ai.swarmsolver.backend.app.agent.infra.langchain4j.tools;
 
 import dev.langchain4j.agent.tool.Tool;
 

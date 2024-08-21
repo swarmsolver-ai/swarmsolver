@@ -2,6 +2,7 @@ package ai.swarmsolver.backend.app.agent.infra.langchain4j;
 
 import ai.swarmsolver.backend.app.agent.domain.*;
 import ai.swarmsolver.backend.app.agent.domain.message.AgentMessage;
+import ai.swarmsolver.backend.app.agent.infra.langchain4j.tools.UserProxyTool;
 import ai.swarmsolver.backend.app.task.model.TaskCoordinate;
 import ai.swarmsolver.backend.app.task.model.TaskId;
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
@@ -61,7 +62,7 @@ class LangChain4jAgentTest {
         LangChain4jAgent agent = LangChain4jAgent.builder()
                 .languageModel(chatLanguageModel)
                 .chatMemory(chatMemory)
-                .tools(List.of(new UserProxy()))
+                .tools(List.of(new UserProxyTool()))
                 .systemMessage("System message")
                 .agentState(new AgentState())
                 .conversationAccess(conversationAccess)
@@ -77,7 +78,7 @@ class LangChain4jAgentTest {
 
         // given the LLM answers with a tool execution request to the user proxy
         ToolExecutionRequest toolExecutionRequest = ToolExecutionRequest.builder()
-                .name("userProxy_askQuestion") // method name of UserProxy class
+                .name("userProxy_askQuestion") // method name of UserProxyTool class
                 .arguments("{ \"arg0\" : \"what is your name\"}") // arguments as json map
                 .build();
         AiMessage aiMessage = new AiMessage("response", Collections.singletonList(toolExecutionRequest));
