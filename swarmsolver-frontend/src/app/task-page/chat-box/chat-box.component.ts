@@ -12,7 +12,7 @@ import {Task} from "../../api/models/task";
 export class ChatBoxComponent {
 
   @Input()
-  task! : Task
+  task!: Task
 
   @Output()
   stepAdded = new EventEmitter<StepAddedEvent>()
@@ -32,20 +32,28 @@ export class ChatBoxComponent {
     this.spec = null
     this.modalService.close(this.addStepDialogId())
   }
+
   addStepDialogId() {
     return 'add-step-dialog-id';
   }
 
   addStep() {
     this.openDialog({
-      confirm: (data) => { this.confirmAdd(data); this.closeDialog() },
+      confirm: (data) => {
+        this.confirmAdd(data);
+        this.closeDialog()
+      },
       cancel: () => this.closeDialog()
     })
   }
 
 
   private confirmAdd(data: StepDialogComponentData) {
-    this.stepAdded.emit(<StepAddedEvent>{ taskId: this.task.id!.identifier, stepName: data.name, agentName: data.agentName })
+    this.stepAdded.emit(<StepAddedEvent>{
+      taskId: this.task.id!.identifier,
+      stepName: data.name,
+      agentName: data.agentName
+    })
   }
 
   @Output()
@@ -53,16 +61,44 @@ export class ChatBoxComponent {
 
   userMessage: string = '';
 
-  calculateRows(): number {
+  calculateRows1(): number {
     const rows = Math.min(Math.ceil(this.userMessage.length / 50), 10); // Adjust 50 according to your desired character width
     return rows < 1 ? 1 : rows;
   }
 
-
+  calculateRows(): number {
+    const desiredCharWidth = 50; // Adjust this value based on your needs
+    let rows = 0;
+    for (const line of (this.userMessage || '').split('\n')) {
+      rows += Math.ceil(line.length / desiredCharWidth);
+    }
+    return Math.min(rows, 10);
+  }
   sendClicked() {
     if (this.userMessage.trim() !== '') {
       this.messageSent.emit(this.userMessage);
       this.userMessage = '';
     }
+  }
+
+  onPaste(event: ClipboardEvent) {
+    this.scrollToBottom(event.target as HTMLTextAreaElement);
+  }
+
+  scrollToBottom(textArea: HTMLTextAreaElement) {
+    setTimeout(() => {
+      textArea.scrollTop = textArea.scrollHeight;
+    }, 0);
+
+  }
+  onKeydown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      if (event.ctrlKey) {
+        this.sendClicked();
+      } else {
+        this.scrollToBottom(event.target as HTMLTextAreaElement)
+      }
+    }
+
   }
 }

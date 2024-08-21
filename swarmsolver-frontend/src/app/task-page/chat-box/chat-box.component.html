@@ -31,9 +31,17 @@
     <div class="relative">
           <textarea
             [rows]="calculateRows()"
-            (keydown.enter)="sendClicked()" [(ngModel)]="userMessage"
+            (keydown)="onKeydown($event)"
+            [(ngModel)]="userMessage"
+            (paste)="onPaste($event)"
             class="p-4 pb-12 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
-            placeholder="Ask me anything..."></textarea>
+            ></textarea>
+      <div
+        *ngIf="!userMessage"
+        class="absolute top-4 left-4 text-gray-400 pointer-events-none text-sm"
+      >
+        Ask me anything...<br>ctrl+enter to submit
+      </div>
 
       <!-- Toolbar -->
       <div class="absolute bottom-px inset-x-px p-2 rounded-b-md bg-white dark:bg-slate-900">
