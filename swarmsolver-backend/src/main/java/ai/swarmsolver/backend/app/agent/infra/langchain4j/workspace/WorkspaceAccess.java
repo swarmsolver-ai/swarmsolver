@@ -33,4 +33,21 @@ public class WorkspaceAccess {
         return agentWorkSpace.getResourceFile(resourceName);
     }
 
+    private File getSharedResourceFile(String resourceName) {
+        return agentWorkSpace.getSharedResourceFile(resourceName);
+    }
+
+    public String readSharedResource(String resourceName) throws IOException{
+        File resourceFile = getSharedResourceFile(resourceName);
+        if (resourceFile.exists()) {
+            return new String(Files.readAllBytes(Paths.get(resourceFile.getAbsolutePath())));
+        } else {
+            throw new IOException("RESOURCE NOT FOUND");
+        }
+    }
+
+    public void writeSharedResource(String resourceName, String content) throws IOException {
+        File resourceFile = getSharedResourceFile(resourceName);
+        Files.write(Paths.get(resourceFile.getAbsolutePath()), content.getBytes());
+    }
 }

@@ -42,7 +42,7 @@ public class LangChain4jAgentFactory implements AgentFactory<LangChain4jAgent, L
     public LangChain4jAgent createAgent(LangChain4jAgentSpecification agentSpecification, AgentState agentState) {
 
         List<Object> tools = new ArrayList<>();
-        tools.add(new UserProxyTool());
+        //tools.add(new UserProxyTool());
         List<Object> toolSpecifications = agentSpecification.getToolSpecifications();
         if (toolSpecifications != null) {
             WorkspaceAccess workspaceAccess = new WorkspaceAccess(AgentWorkSpace.of(directoryStructure, agentState.getAgentCoordinate()));

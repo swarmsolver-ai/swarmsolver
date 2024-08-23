@@ -35,4 +35,8 @@ public class AgentWorkSpace {
     public File getResourceFile(String resourceName) {
         return new File(taskWorkspace.getSubTaskDir(), String.format("resource-%s.txt", resourceName));
     }
+
+    public File getSharedResourceFile(String resourceName) {
+        return new File(taskWorkspace.getMainTaskDir(), String.format("resource-%s.txt", resourceName));
+    }
 }
