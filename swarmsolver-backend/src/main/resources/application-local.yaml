@@ -3,3 +3,4 @@ ai.swarmsolver:
     default: workspace
     workspace2: workspace2
     workspace3: workspace3
+    workspace4: /home/stiepeb/_/project/github/swarmsolver-ai/swarmsolver-workspaces/workspace4/src/main/groovy
