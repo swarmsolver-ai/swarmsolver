@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import {Router} from "@angular/router";
+import {WorkSpaceService} from "../../work-space.service";
+import {NavigationService} from "../../navigation.service";
 
 @Component({
   selector: 'app-header',
@@ -7,5 +9,10 @@ import {Router} from "@angular/router";
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
-    constructor(private router: Router) {}
+    constructor(private navigate: NavigationService) {}
+
+    toOverview($event: Event) {
+      $event.preventDefault();
+      this.navigate.toOverviewPage();
+    }
 }

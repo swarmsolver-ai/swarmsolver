@@ -6,8 +6,8 @@ import {TaskOverviewPageComponent} from "./task-overview-page/task-overview-page
 import {TaskPageComponent} from "./task-page/task-page.component";
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/fe/home', pathMatch: 'full' },
-  { path: 'fe/home', component: TaskOverviewPageComponent },
+  { path: '', redirectTo: '/fe/home/', pathMatch: 'full' },
+  { path: 'fe/home/:workspace', component: TaskOverviewPageComponent },
   { path: 'fe/task/:workspace/:id', component: TaskPageComponent },
 ];
 

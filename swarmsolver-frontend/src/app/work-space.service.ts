@@ -1,6 +1,5 @@
 import {Injectable, signal, WritableSignal} from "@angular/core";
 import {TaskControllerService} from "./api/services/task-controller.service";
-import {BehaviorSubject, Observable} from "rxjs";
 import {AgentControllerService} from "./api/services/agent-controller.service";
 import {AgentDescriptorDto} from "./api/models/agent-descriptor-dto";
 
@@ -26,7 +25,8 @@ export class WorkSpaceService {
       .subscribe(workSpaces => {
         this.workSpaces.set(workSpaces)
         if (workSpaces.length > 0) {
-          this.selectWorkSpace(workSpaces[0])
+          let defaultWorkSpace = this.selectedWorkSpace() ? this.selectedWorkSpace() : workSpaces[0];
+          this.selectWorkSpace(defaultWorkSpace);
         }
       })
   }

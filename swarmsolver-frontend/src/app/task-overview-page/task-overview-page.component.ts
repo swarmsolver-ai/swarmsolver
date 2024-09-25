@@ -2,11 +2,12 @@ import {Component, OnInit} from '@angular/core';
 import {TaskOverviewService} from "./task-overview.service";
 import {Observable} from "rxjs";
 import {TaskSummaryDto} from "../api/models/task-summary-dto";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {ModalService} from "../styleguide/modal/modal-service";
 import {TaskDialogComponentSpec, TaskDialogState} from "./task-dialog/task-dialog.component";
 import {ConfirmationDialogSpec} from "../styleguide/confirmation-dialog/confirmation-dialog.component";
 import {WorkSpaceService} from "../work-space.service";
+import {NavigationService} from "../navigation.service";
 
 @Component({
   selector: 'app-task-overview-page',
@@ -16,7 +17,7 @@ import {WorkSpaceService} from "../work-space.service";
 })
 export class TaskOverviewPageComponent implements OnInit {
 
-  constructor(private service: TaskOverviewService, private router: Router, private modalService: ModalService, private workSpaceService: WorkSpaceService) {
+  constructor(private service: TaskOverviewService, private route: ActivatedRoute, private modalService: ModalService, private workSpaceService: WorkSpaceService, private navigate: NavigationService) {
   }
 
   task$: Observable<TaskSummaryDto[]> = this.service.task$
@@ -26,13 +27,19 @@ export class TaskOverviewPageComponent implements OnInit {
   selectedWorkSpace = this.workSpaceService.selectedWorkSpace
 
   ngOnInit(): void {
-    this.service.load()
+    this.service.load();
+    this.route.paramMap.subscribe((params) => {
+      let workspace = params.get('workspace')
+      if (workspace) {
+        this.workSpaceService.selectWorkSpace(workspace);
+      }
+    });
   }
 
   openClicked($event: Event, task: TaskSummaryDto) {
     $event.preventDefault();
     if (task && task.id) {
-      this.router.navigate(['fe','task', this.selectedWorkSpace(), task.id]);
+      this.navigate.toTaskPage(task.id);
     }
   }
 
@@ -125,6 +132,8 @@ export class TaskOverviewPageComponent implements OnInit {
 
   onSelectWorkSpace($event: Event) {
     const selectElement = $event.target as HTMLSelectElement;
-    this.workSpaceService.selectWorkSpace(selectElement.value)
+    let workspace = selectElement.value;
+    this.workSpaceService.selectWorkSpace(workspace);
+    this.navigate.changeOverviewPageUrlWithoutRouting(workspace);
   }
 }
