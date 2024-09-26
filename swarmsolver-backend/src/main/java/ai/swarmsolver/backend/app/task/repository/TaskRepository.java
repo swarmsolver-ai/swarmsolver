@@ -1,5 +1,6 @@
 package ai.swarmsolver.backend.app.task.repository;
 
+import ai.swarmsolver.backend.app.task.dto.FilterDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import ai.swarmsolver.backend.app.task.model.Task;
@@ -46,23 +47,39 @@ public class TaskRepository {
 
 
     @SneakyThrows
-    public List<TaskSummaryDTO> getMainTaskSummaries(TaskCoordinate taskCoordinate) {
+    public List<TaskSummaryDTO> getMainTaskSummaries(TaskCoordinate taskCoordinate, FilterDTO filterDTO) {
         TaskWorkspace taskWorkspace = TaskWorkspace.of(directoryStructure, taskCoordinate);
 
         List<File> taskFiles = taskWorkspace.listMainTaskFileLocations();
 
         return taskFiles.stream()
                 .map(this::getSummary)
+                .filter(summary -> filter(summary, filterDTO))
                 .sorted(Comparator.comparing(TaskSummaryDTO::getTitle))
                 .collect(Collectors.toList());
     }
 
+    private boolean filter(TaskSummaryDTO summary, FilterDTO filterDTO) {
+        return
+                // when filter is off return only non archived, otherwise both archived and non archived
+                (filterDTO.isArchived() || !summary.isArchived())
+                // when filter on favorites return only favorites, otherwise both favorites and non favorites
+                && (!filterDTO.isFavorite() || summary.isFavorite())
+                // when filter on name filter on partial matches
+                && ( (filterDTO.getName()==null || filterDTO.getName().isEmpty()) || summary.getTitle().contains(filterDTO.getName()))
+                ;
+    }
+
+
     @SneakyThrows
     private TaskSummaryDTO getSummary(File file) {
         Task task = objectMapper.readValue(file, Task.class);
-        TaskId taskId = task.getId();
-        String title = task.getTitle();
-        return new TaskSummaryDTO(taskId.getIdentifier(), title);
+        return TaskSummaryDTO.builder()
+                .id(task.getId().getIdentifier())
+                .title(task.getTitle())
+                .archived(task.isArchived())
+                .favorite(task.isFavorite())
+                .build();
     }
 
     private Task findSubTask(Task task, TaskId taskId) {
@@ -91,5 +108,18 @@ public class TaskRepository {
         subTask.setTitle(title);
         this.store(taskCoordinate, mainTask);
     }
+
+    public void updateTaskArchived(TaskCoordinate taskCoordinate, boolean archived) {
+        Task task = fetch(taskCoordinate);
+        task.setArchived(archived);
+        this.store(taskCoordinate, task);
+    }
+
+    public void updateTaskFavorite(TaskCoordinate taskCoordinate, boolean favorite) {
+        Task task = fetch(taskCoordinate);
+        task.setFavorite(favorite);
+        this.store(taskCoordinate, task);
+    }
+
 
 }

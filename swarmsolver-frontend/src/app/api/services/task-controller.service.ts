@@ -29,6 +29,10 @@ import { TaskId } from '../models/task-id';
 import { TaskSummaryDto } from '../models/task-summary-dto';
 import { updateSubTaskTitleUsingPut } from '../fn/task-controller/update-sub-task-title-using-put';
 import { UpdateSubTaskTitleUsingPut$Params } from '../fn/task-controller/update-sub-task-title-using-put';
+import { updateTaskArchivedUsingPut } from '../fn/task-controller/update-task-archived-using-put';
+import { UpdateTaskArchivedUsingPut$Params } from '../fn/task-controller/update-task-archived-using-put';
+import { updateTaskFavoriteUsingPut } from '../fn/task-controller/update-task-favorite-using-put';
+import { UpdateTaskFavoriteUsingPut$Params } from '../fn/task-controller/update-task-favorite-using-put';
 import { updateTaskTitleUsingPut } from '../fn/task-controller/update-task-title-using-put';
 import { UpdateTaskTitleUsingPut$Params } from '../fn/task-controller/update-task-title-using-put';
 import { userMessageUsingPost } from '../fn/task-controller/user-message-using-post';
@@ -205,6 +209,72 @@ export class TaskControllerService extends BaseService {
    */
   updateSubTaskTitleUsingPut(params?: UpdateSubTaskTitleUsingPut$Params, context?: HttpContext): Observable<void> {
     return this.updateSubTaskTitleUsingPut$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
+    );
+  }
+
+  /** Path part for operation `updateTaskArchivedUsingPut()` */
+  static readonly UpdateTaskArchivedUsingPutPath = '/api/task/task/archive';
+
+  /**
+   * updateTaskArchived.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `updateTaskArchivedUsingPut()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  updateTaskArchivedUsingPut$Response(params?: UpdateTaskArchivedUsingPut$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return updateTaskArchivedUsingPut(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * updateTaskArchived.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `updateTaskArchivedUsingPut$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  updateTaskArchivedUsingPut(params?: UpdateTaskArchivedUsingPut$Params, context?: HttpContext): Observable<void> {
+    return this.updateTaskArchivedUsingPut$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
+    );
+  }
+
+  /** Path part for operation `updateTaskFavoriteUsingPut()` */
+  static readonly UpdateTaskFavoriteUsingPutPath = '/api/task/task/favorite';
+
+  /**
+   * updateTaskFavorite.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `updateTaskFavoriteUsingPut()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  updateTaskFavoriteUsingPut$Response(params?: UpdateTaskFavoriteUsingPut$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return updateTaskFavoriteUsingPut(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * updateTaskFavorite.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `updateTaskFavoriteUsingPut$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  updateTaskFavoriteUsingPut(params?: UpdateTaskFavoriteUsingPut$Params, context?: HttpContext): Observable<void> {
+    return this.updateTaskFavoriteUsingPut$Response(params, context).pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
     );
   }

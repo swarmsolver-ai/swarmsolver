@@ -23,6 +23,8 @@ public class Task {
     private List<Task> subTasks;
     private AgentId agentId;
     private String agentName;
+    private boolean archived;
+    private boolean favorite;
 
     @JsonIgnore
     public boolean isComposite() {

@@ -6,9 +6,8 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { TaskSummaryDto } from '../../models/task-summary-dto';
 
-export interface ListUsingGet$Params {
+export interface UpdateTaskFavoriteUsingPut$Params {
 
 /**
  * workSpaceName
@@ -16,38 +15,32 @@ export interface ListUsingGet$Params {
   workSpaceName?: string;
 
 /**
- * archived
+ * taskId
  */
-  archived?: boolean;
+  taskId?: string;
 
 /**
  * favorite
  */
   favorite?: boolean;
-
-/**
- * name
- */
-  name?: string;
 }
 
-export function listUsingGet(http: HttpClient, rootUrl: string, params?: ListUsingGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<TaskSummaryDto>>> {
-  const rb = new RequestBuilder(rootUrl, listUsingGet.PATH, 'get');
+export function updateTaskFavoriteUsingPut(http: HttpClient, rootUrl: string, params?: UpdateTaskFavoriteUsingPut$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  const rb = new RequestBuilder(rootUrl, updateTaskFavoriteUsingPut.PATH, 'put');
   if (params) {
     rb.query('workSpaceName', params.workSpaceName, {"style":"form"});
-    rb.query('archived', params.archived, {"style":"form"});
+    rb.query('taskId', params.taskId, {"style":"form"});
     rb.query('favorite', params.favorite, {"style":"form"});
-    rb.query('name', params.name, {"style":"form"});
   }
 
   return http.request(
-    rb.build({ responseType: 'json', accept: 'application/json', context })
+    rb.build({ responseType: 'text', accept: '*/*', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<TaskSummaryDto>>;
+      return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
     })
   );
 }
 
-listUsingGet.PATH = '/api/task/tasks';
+updateTaskFavoriteUsingPut.PATH = '/api/task/task/favorite';

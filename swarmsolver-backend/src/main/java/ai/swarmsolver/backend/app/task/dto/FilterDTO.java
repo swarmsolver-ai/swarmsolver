@@ -7,9 +7,8 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @Getter
-public class TaskSummaryDTO {
-    private String id;
-    private String title;
+public class FilterDTO {
     private boolean archived;
     private boolean favorite;
+    private String name;
 }

@@ -566,6 +566,122 @@
         }
       }
     },
+    "/api/task/task/archive": {
+      "put": {
+        "tags": [
+          "task-controller"
+        ],
+        "summary": "updateTaskArchived",
+        "operationId": "updateTaskArchivedUsingPUT",
+        "parameters": [
+          {
+            "name": "workSpaceName",
+            "in": "query",
+            "description": "workSpaceName",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "taskId",
+            "in": "query",
+            "description": "taskId",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "archived",
+            "in": "query",
+            "description": "archived",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/task/task/favorite": {
+      "put": {
+        "tags": [
+          "task-controller"
+        ],
+        "summary": "updateTaskFavorite",
+        "operationId": "updateTaskFavoriteUsingPUT",
+        "parameters": [
+          {
+            "name": "workSpaceName",
+            "in": "query",
+            "description": "workSpaceName",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "taskId",
+            "in": "query",
+            "description": "taskId",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "favorite",
+            "in": "query",
+            "description": "favorite",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
     "/api/task/task/remove": {
       "put": {
         "tags": [
@@ -684,6 +800,36 @@
             "name": "workSpaceName",
             "in": "query",
             "description": "workSpaceName",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "archived",
+            "in": "query",
+            "description": "archived",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "favorite",
+            "in": "query",
+            "description": "favorite",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "name",
             "required": false,
             "style": "form",
             "schema": {
@@ -871,8 +1017,14 @@
           "agentName": {
             "type": "string"
           },
+          "archived": {
+            "type": "boolean"
+          },
           "description": {
             "type": "string"
+          },
+          "favorite": {
+            "type": "boolean"
           },
           "id": {
             "$ref": "#/components/schemas/TaskId"
@@ -924,6 +1076,12 @@
         "title": "TaskSummaryDTO",
         "type": "object",
         "properties": {
+          "archived": {
+            "type": "boolean"
+          },
+          "favorite": {
+            "type": "boolean"
+          },
           "id": {
             "type": "string"
           },

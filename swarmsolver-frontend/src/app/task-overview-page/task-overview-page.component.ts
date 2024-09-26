@@ -129,11 +129,32 @@ export class TaskOverviewPageComponent implements OnInit {
     this.modalService.close(this.deleteTaskDialogId())
   }
 
+  archiveClicked($event: Event, task: TaskSummaryDto) {
+    $event.preventDefault();
+    this.service.archiveTask(task.id!, !task.archived);
+  }
 
   onSelectWorkSpace($event: Event) {
     const selectElement = $event.target as HTMLSelectElement;
     let workspace = selectElement.value;
     this.workSpaceService.selectWorkSpace(workspace);
     this.navigate.changeOverviewPageUrlWithoutRouting(workspace);
+  }
+
+  filterState = this.service.filterState;
+
+  updateArchivedFilter($event: Event) {
+    const isChecked = ($event.target as HTMLInputElement).checked;
+    this.service.updateArchivedFilter(isChecked);
+  }
+
+  filtersActive(): boolean {
+     return this.activeFilterCount() > 0;
+  }
+
+  activeFilterCount(): number {
+    let count = 0;
+    if (this.filterState().archived) count += 1;
+    return count;
   }
 }

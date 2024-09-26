@@ -1,6 +1,7 @@
 package ai.swarmsolver.backend.app.task.controller;
 
 import ai.swarmsolver.backend.app.agent.app.AgentSummaryDTO;
+import ai.swarmsolver.backend.app.task.dto.FilterDTO;
 import ai.swarmsolver.backend.app.task.dto.TaskSummaryDTO;
 import ai.swarmsolver.backend.app.task.dto.UserMessageDTO;
 import ai.swarmsolver.backend.app.task.model.Task;
@@ -37,6 +38,16 @@ public class TaskController {
         taskService.updateTaskTitle(TaskCoordinate.of(workSpaceName, TaskId.of(taskId)), title);
     }
 
+    @PutMapping(value = "/task/archive", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void updateTaskArchived(String workSpaceName, String taskId, boolean archived) {
+        taskService.updateTaskArchived(TaskCoordinate.of(workSpaceName, TaskId.of(taskId)), archived);
+    }
+
+    @PutMapping(value = "/task/favorite", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void updateTaskFavorite(String workSpaceName, String taskId, boolean favorite) {
+        taskService.updateTaskArchived(TaskCoordinate.of(workSpaceName, TaskId.of(taskId)), favorite);
+    }
+
     @PutMapping(value = "/task/remove", produces = MediaType.APPLICATION_JSON_VALUE)
     public void deleteTask(String workSpaceName, String taskId) {
         taskService.deleteMainTask(TaskCoordinate.of(workSpaceName, TaskId.of(taskId)));
@@ -59,8 +70,13 @@ public class TaskController {
     }
 
     @GetMapping(value= "/tasks", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<TaskSummaryDTO> list(String workSpaceName) {
-        return taskService.list(workSpaceName);
+    public List<TaskSummaryDTO> list(String workSpaceName, boolean archived, boolean favorite, String name) {
+        FilterDTO filterDTO = FilterDTO.builder()
+                .archived(archived)
+                .favorite(favorite)
+                .name(name)
+                .build();
+        return taskService.list(workSpaceName, filterDTO);
     }
 
     @PostMapping(value="/agent", produces = MediaType.APPLICATION_JSON_VALUE)

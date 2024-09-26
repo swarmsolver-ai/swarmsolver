@@ -1,4 +1,4 @@
-import {computed, effect, Injectable} from '@angular/core';
+import {computed, effect, Injectable, signal} from '@angular/core';
 import {BehaviorSubject, Observable} from "rxjs";
 import {TaskControllerService} from "../api/services/task-controller.service";
 import {TaskSummaryDto} from "../api/models/task-summary-dto";
@@ -12,6 +12,8 @@ export class TaskOverviewService {
 
   private selectedWorkSpace = this.workSpaceService.selectedWorkSpace;
 
+  filterState = signal<{ archived: boolean }>({ archived: false });
+
   private store = new BehaviorSubject<TaskSummaryDto[]>([])
 
   public task$: Observable<TaskSummaryDto[]> = this.store
@@ -24,7 +26,10 @@ export class TaskOverviewService {
   }
 
   load() {
-    this.taskControllerService.listUsingGet({workSpaceName: this.selectedWorkSpace()}).subscribe(value => {
+    this.taskControllerService.listUsingGet({
+      workSpaceName: this.selectedWorkSpace(),
+      ...this.filterState(),
+    }).subscribe(value => {
       this.store.next(value)
     })
   }
@@ -37,6 +42,14 @@ export class TaskOverviewService {
     this.taskControllerService.deleteTaskUsingPut({taskId, workSpaceName: this.selectedWorkSpace()}).subscribe(value => this.load())
   }
 
+  archiveTask(taskId: string, archived: boolean) {
+    this.taskControllerService.updateTaskArchivedUsingPut({
+      taskId,
+      workSpaceName: this.selectedWorkSpace(),
+      archived
+    }).subscribe(value => this.load())
+  }
+
   updateTaskTitle(taskId: TaskId, title: string) {
     this.taskControllerService.updateTaskTitleUsingPut({
       workSpaceName: this.selectedWorkSpace(),
@@ -45,5 +58,13 @@ export class TaskOverviewService {
     }).subscribe(value => this.load())
   }
 
+  updateArchivedFilter( archived: boolean) {
+    let filterState = this.filterState()
+    this.filterState.set({
+      ... this.filterState(),
+      archived,
+    });
+    this.load();
+  }
 
 }

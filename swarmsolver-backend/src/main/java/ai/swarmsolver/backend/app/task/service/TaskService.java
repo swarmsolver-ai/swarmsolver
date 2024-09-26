@@ -4,6 +4,7 @@ import ai.swarmsolver.backend.app.agent.app.AgentService;
 import ai.swarmsolver.backend.app.agent.app.AgentSummaryDTO;
 import ai.swarmsolver.backend.app.agent.domain.AgentCoordinate;
 import ai.swarmsolver.backend.app.agent.domain.message.AgentMessage;
+import ai.swarmsolver.backend.app.task.dto.FilterDTO;
 import ai.swarmsolver.backend.app.task.dto.TaskSummaryDTO;
 import ai.swarmsolver.backend.app.task.model.Task;
 import ai.swarmsolver.backend.app.task.model.TaskCoordinate;
@@ -129,8 +130,8 @@ public class TaskService {
         return findSubTask(mainTask, subTaskCoordinate.getSubTaskId());
     }
 
-    public List<TaskSummaryDTO> list(String workSpaceName) {
-        return taskRepository.getMainTaskSummaries(TaskCoordinate.of(workSpaceName, null));
+    public List<TaskSummaryDTO> list(String workSpaceName, FilterDTO filterDTO) {
+        return taskRepository.getMainTaskSummaries(TaskCoordinate.of(workSpaceName, null), filterDTO);
     }
 
     public void updateTaskTitle(TaskCoordinate taskCoordinate, String title) {
@@ -139,6 +140,14 @@ public class TaskService {
 
     public void updateSubTaskTitle(TaskCoordinate taskCoordinate, String title) {
         taskRepository.updateSubTaskTitle(taskCoordinate, title);
+    }
+
+    public void updateTaskArchived(TaskCoordinate mainTaskCoordinate, boolean archived) {
+        taskRepository.updateTaskArchived(mainTaskCoordinate, archived);
+    }
+
+    public void updateTaskFavorite(TaskCoordinate mainTaskCoordinate, boolean favorite) {
+        taskRepository.updateTaskFavorite(mainTaskCoordinate, favorite);
     }
 
     public AgentSummaryDTO getAgentSummary(TaskCoordinate taskCoordinate) {
@@ -171,4 +180,5 @@ public class TaskService {
                 .sorted()
                 .toList();
     }
+
 }
