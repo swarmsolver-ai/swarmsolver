@@ -1079,11 +1079,19 @@
           "archived": {
             "type": "boolean"
           },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          },
           "favorite": {
             "type": "boolean"
           },
           "id": {
             "type": "string"
+          },
+          "lastUpdated": {
+            "type": "string",
+            "format": "date-time"
           },
           "title": {
             "type": "string"

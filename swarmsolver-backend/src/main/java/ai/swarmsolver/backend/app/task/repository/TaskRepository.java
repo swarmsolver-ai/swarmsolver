@@ -1,17 +1,24 @@
 package ai.swarmsolver.backend.app.task.repository;
 
 import ai.swarmsolver.backend.app.task.dto.FilterDTO;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import ai.swarmsolver.backend.app.task.dto.TaskSummaryDTO;
 import ai.swarmsolver.backend.app.task.model.Task;
 import ai.swarmsolver.backend.app.task.model.TaskCoordinate;
 import ai.swarmsolver.backend.app.task.model.TaskId;
 import ai.swarmsolver.backend.infra.DirectoryStructure;
-import ai.swarmsolver.backend.app.task.dto.TaskSummaryDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -74,11 +81,22 @@ public class TaskRepository {
     @SneakyThrows
     private TaskSummaryDTO getSummary(File file) {
         Task task = objectMapper.readValue(file, Task.class);
+        Path path = Paths.get(file.getAbsolutePath());
+        BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class);
+
+        FileTime creationTime = attributes.creationTime();
+        FileTime lastModifiedTime = attributes.lastModifiedTime();
+
+        LocalDateTime created = LocalDateTime.ofInstant(creationTime.toInstant(), ZoneId.systemDefault());
+        LocalDateTime lastUpdated = LocalDateTime.ofInstant(lastModifiedTime.toInstant(), ZoneId.systemDefault());
+
         return TaskSummaryDTO.builder()
                 .id(task.getId().getIdentifier())
                 .title(task.getTitle())
                 .archived(task.isArchived())
                 .favorite(task.isFavorite())
+                .created(created)
+                .lastUpdated(lastUpdated)
                 .build();
     }
 

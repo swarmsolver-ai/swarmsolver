@@ -8,6 +8,7 @@ import {TaskDialogComponentSpec, TaskDialogState} from "./task-dialog/task-dialo
 import {ConfirmationDialogSpec} from "../styleguide/confirmation-dialog/confirmation-dialog.component";
 import {WorkSpaceService} from "../work-space.service";
 import {NavigationService} from "../navigation.service";
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-task-overview-page',
