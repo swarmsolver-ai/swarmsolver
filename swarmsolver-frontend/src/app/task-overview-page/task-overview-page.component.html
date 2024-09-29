@@ -49,12 +49,16 @@
   <table class="table-fixed min-w-full divide-y divide-gray-200 dark:divide-gray-700">
     <thead class="bg-gray-50 dark:bg-neutral-800">
     <tr>
-      <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Task</th>
+      <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">
+        <span  class="flex items-center">Task <app-table-column-sort [sortOrder]="sortOrder('NAME')"  (toggled)="toggleSort('NAME', $event)"></app-table-column-sort></span>
+      </th>
       <!--
       <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Tags</th>
       <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Priority</th>
       -->
-      <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Created</th>
+      <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">
+        <span  class="flex items-center">Created <app-table-column-sort [sortOrder]="sortOrder('CREATED')" (toggled)="toggleSort('CREATED', $event)"></app-table-column-sort></span>
+      </th>
       <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Action</th>
     </tr>
     </thead>

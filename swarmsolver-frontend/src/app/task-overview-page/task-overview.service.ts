@@ -5,6 +5,7 @@ import {TaskSummaryDto} from "../api/models/task-summary-dto";
 import {TaskId} from "../api/models/task-id";
 import {WorkSpaceService} from "../work-space.service";
 import {TaskSummaryListDto} from "../api/models/task-summary-list-dto";
+import {Order} from "../styleguide/table/table-column-sort/table-column-sort.component";
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +29,10 @@ export class TaskOverviewService {
   constructor(private taskControllerService: TaskControllerService, private workSpaceService: WorkSpaceService) {
     effect(() => {
       const selectedWorkspace = this.selectedWorkSpace();
+      this.load();
+    });
+    effect(() => {
+      const query = this.query();
       this.load();
     });
   }
@@ -74,7 +79,17 @@ export class TaskOverviewService {
       },
       sorting: this.query().sorting
     });
-    this.load();
   }
 
+  sort(field: 'NAME' | 'CREATED', order: Order) {
+    this.query.set({
+      filtering: {
+        ...this.query().filtering!,
+      },
+      sorting: {
+        field,
+        order
+      }
+    });
+  }
 }

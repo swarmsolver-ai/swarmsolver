@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {TaskOverviewService} from "./task-overview.service";
-import {Observable} from "rxjs";
 import {TaskSummaryDto} from "../api/models/task-summary-dto";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ModalService} from "../styleguide/modal/modal-service";
@@ -8,7 +7,7 @@ import {TaskDialogComponentSpec, TaskDialogState} from "./task-dialog/task-dialo
 import {ConfirmationDialogSpec} from "../styleguide/confirmation-dialog/confirmation-dialog.component";
 import {WorkSpaceService} from "../work-space.service";
 import {NavigationService} from "../navigation.service";
-import { DatePipe } from '@angular/common';
+import {Order} from "../styleguide/table/table-column-sort/table-column-sort.component";
 
 @Component({
   selector: 'app-task-overview-page',
@@ -157,5 +156,14 @@ export class TaskOverviewPageComponent implements OnInit {
     let count = 0;
     if (this.query().filtering!.archived) count += 1;
     return count;
+  }
+
+  toggleSort(columnName: 'NAME' | 'CREATED', order: Order) {
+    this.service.sort(columnName, order);
+  }
+
+  sortOrder(field: 'NAME' | 'CREATED') {
+    let sorting = this.service.query().sorting!;
+    return sorting.field == field ? sorting.order! : null;
   }
 }

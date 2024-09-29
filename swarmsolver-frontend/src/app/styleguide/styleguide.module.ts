@@ -8,6 +8,7 @@ import { DialogComponent } from './dialog/dialog.component';
 import { TableHeaderComponent } from './table/table-header/table-header.component';
 import { TableCardComponent } from './table/table-card/table-card.component';
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
+import { TableColumnSortComponent } from './table/table-column-sort/table-column-sort.component';
 
 @NgModule({
   declarations: [
@@ -17,20 +18,22 @@ import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-
     DialogComponent,
     TableHeaderComponent,
     TableCardComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    TableColumnSortComponent
   ],
   imports: [
     CoreModule
   ],
-  exports: [
-    HeaderComponent,
-    SideBarComponent,
-    ModalComponent,
-    DialogComponent,
-    TableHeaderComponent,
-    TableCardComponent,
-    ConfirmationDialogComponent
-  ]
+    exports: [
+        HeaderComponent,
+        SideBarComponent,
+        ModalComponent,
+        DialogComponent,
+        TableHeaderComponent,
+        TableCardComponent,
+        ConfirmationDialogComponent,
+        TableColumnSortComponent
+    ]
 })
 export class StyleguideModule {
 }
