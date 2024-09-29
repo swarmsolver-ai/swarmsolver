@@ -835,6 +835,34 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "field",
+            "in": "query",
+            "description": "field",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "CREATED",
+                "NAME"
+              ]
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "order",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ASCENDING",
+                "DESCENDING"
+              ]
+            }
           }
         ],
         "responses": {
@@ -843,10 +871,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TaskSummaryDTO"
-                  }
+                  "$ref": "#/components/schemas/TaskSummaryListDTO"
                 }
               }
             }
@@ -985,6 +1010,41 @@
           }
         }
       },
+      "FilterDTO": {
+        "title": "FilterDTO",
+        "type": "object",
+        "properties": {
+          "archived": {
+            "type": "boolean"
+          },
+          "favorite": {
+            "type": "boolean"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "SortingDTO": {
+        "title": "SortingDTO",
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string",
+            "enum": [
+              "CREATED",
+              "NAME"
+            ]
+          },
+          "order": {
+            "type": "string",
+            "enum": [
+              "ASCENDING",
+              "DESCENDING"
+            ]
+          }
+        }
+      },
       "SseEmitter": {
         "title": "SseEmitter",
         "type": "object",
@@ -1094,6 +1154,27 @@
             "format": "date-time"
           },
           "title": {
+            "type": "string"
+          }
+        }
+      },
+      "TaskSummaryListDTO": {
+        "title": "TaskSummaryListDTO",
+        "type": "object",
+        "properties": {
+          "filtering": {
+            "$ref": "#/components/schemas/FilterDTO"
+          },
+          "sorting": {
+            "$ref": "#/components/schemas/SortingDTO"
+          },
+          "summaries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TaskSummaryDTO"
+            }
+          },
+          "workspace": {
             "type": "string"
           }
         }

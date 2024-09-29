@@ -1,5 +1,5 @@
 
-<app-table-card *ngIf="task$ | async as tasks">
+<app-table-card >
   <app-table-header [title]="'Tasks'" [subTitle]="'Add Tasks, manage and more.'">
     <div class="inline-flex gap-x-2">
       <!-- switch workspace -->
@@ -23,7 +23,7 @@
           <div class="divide-y divide-gray-200 dark:divide-neutral-700">
             <label for="hs-as-filters-dropdown-all" class="flex py-2.5 px-3">
               <input type="checkbox" class="shrink-0 mt-0.5 border-gray-300 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-600 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-as-filters-dropdown-all"
-                     [checked]="filterState().archived" (change)="updateArchivedFilter($event)"
+                     [checked]="query().filtering!.archived" (change)="updateArchivedFilter($event)"
               >
               <span class="ms-3 text-sm text-gray-800 dark:text-neutral-200">Archived</span>
             </label>
@@ -59,7 +59,7 @@
     </tr>
     </thead>
     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-      @for (task of tasks; track $index) {
+      @for (task of tasks(); track $index) {
         <tr>
           <td class="w-200  ">
             <a (click)="openClicked($event, task)" class="block relative z-10" href="#">

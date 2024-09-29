@@ -2,6 +2,7 @@ package ai.swarmsolver.backend.app.task;
 
 import ai.swarmsolver.backend.app.TestBase;
 import ai.swarmsolver.backend.app.task.dto.FilterDTO;
+import ai.swarmsolver.backend.app.task.dto.SortingDTO;
 import ai.swarmsolver.backend.app.task.dto.TaskSummaryDTO;
 import ai.swarmsolver.backend.app.task.model.Task;
 import ai.swarmsolver.backend.app.task.model.TaskCoordinate;
@@ -35,7 +36,7 @@ public class TaskServiceTest extends TestBase {
         TaskCoordinate taskCoordinate = taskService.createMainTask(workSpaceName, main_task_name);
         printDirStructure("task created");
 
-        // I can find the task by its's main_task_id
+        // I can find the task by its main_task_id
         Task task = taskService.getMainTask(taskCoordinate);
 
         assertNotNull(task);
@@ -154,9 +155,9 @@ public class TaskServiceTest extends TestBase {
             Task task = taskService.getMainTask(mainTaskCoordinate);
             assertFalse(task.isArchived());
             // and the task list filtered without archived filter shows the task because it is not archived
-            assertEquals(1, taskService.list(workSpaceName, FilterDTO.builder().build()).size());
+            assertEquals(1, taskService.list(workSpaceName, FilterDTO.builder().build()).getSummaries().size());
             // and the task list filtered with archived filter does show the task, archived filter shows both archived and non archived
-            assertEquals(1, taskService.list(workSpaceName, FilterDTO.builder().archived(true).build()).size());
+            assertEquals(1, taskService.list(workSpaceName, FilterDTO.builder().archived(true).build()).getSummaries().size());
         }
 
         // when I archive the task
@@ -169,9 +170,9 @@ public class TaskServiceTest extends TestBase {
             Task task = taskService.getMainTask(mainTaskCoordinate);
             assertTrue(task.isArchived());
             // and the task list filtered without archived filter does not show the task
-            assertEquals(0, taskService.list(workSpaceName, FilterDTO.builder().build()).size());
+            assertEquals(0, taskService.list(workSpaceName, FilterDTO.builder().build()).getSummaries().size());
             // and the task list filtered with archived filter does show the task, archived filter shows both archived and non archived
-            assertEquals(1, taskService.list(workSpaceName, FilterDTO.builder().archived(true).build()).size());
+            assertEquals(1, taskService.list(workSpaceName, FilterDTO.builder().archived(true).build()).getSummaries().size());
         }
 
     }
@@ -187,9 +188,9 @@ public class TaskServiceTest extends TestBase {
             Task task = taskService.getMainTask(mainTaskCoordinate);
             assertFalse(task.isFavorite());
             // and the task list filtered without "only favorites" filter shows the task (a false fav filter lists both favorite an non favorite)
-            assertEquals(1, taskService.list(workSpaceName, FilterDTO.builder().build()).size());
+            assertEquals(1, taskService.list(workSpaceName, FilterDTO.builder().build()).getSummaries().size());
             // and the task list filtered with fav filter does not show the task because it is not favorite
-            assertEquals(0, taskService.list(workSpaceName, FilterDTO.builder().favorite(true).build()).size());
+            assertEquals(0, taskService.list(workSpaceName, FilterDTO.builder().favorite(true).build()).getSummaries().size());
         }
 
         // when I mark the task as  favorite
@@ -202,9 +203,9 @@ public class TaskServiceTest extends TestBase {
             Task task = taskService.getMainTask(mainTaskCoordinate);
             assertTrue(task.isFavorite());
             // and the task list filtered without fav filter shows the task (a false fav filter lists both favorite an non favorite)
-            assertEquals(1, taskService.list(workSpaceName, FilterDTO.builder().build()).size());
+            assertEquals(1, taskService.list(workSpaceName, FilterDTO.builder().build()).getSummaries().size());
             // and the task list filtered with fav filter does show the task
-            assertEquals(1, taskService.list(workSpaceName, FilterDTO.builder().favorite(true).build()).size());
+            assertEquals(1, taskService.list(workSpaceName, FilterDTO.builder().favorite(true).build()).getSummaries().size());
 
         }
 
@@ -256,7 +257,7 @@ public class TaskServiceTest extends TestBase {
         randomNames.forEach(name -> taskService.createMainTask("default", name));
 
         // when I list the main tasks
-        List<TaskSummaryDTO> list = taskService.list("default", FilterDTO.builder().build());
+        List<TaskSummaryDTO> list = taskService.list("default", FilterDTO.builder().build()).getSummaries();
 
         // then  the summaries are ordered alphabetically by their titles
         Collections.sort(randomNames);

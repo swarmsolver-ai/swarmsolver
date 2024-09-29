@@ -26,7 +26,7 @@ import { listUsingGet } from '../fn/task-controller/list-using-get';
 import { ListUsingGet$Params } from '../fn/task-controller/list-using-get';
 import { Task } from '../models/task';
 import { TaskId } from '../models/task-id';
-import { TaskSummaryDto } from '../models/task-summary-dto';
+import { TaskSummaryListDto } from '../models/task-summary-list-dto';
 import { updateSubTaskTitleUsingPut } from '../fn/task-controller/update-sub-task-title-using-put';
 import { UpdateSubTaskTitleUsingPut$Params } from '../fn/task-controller/update-sub-task-title-using-put';
 import { updateTaskArchivedUsingPut } from '../fn/task-controller/update-task-archived-using-put';
@@ -358,7 +358,7 @@ export class TaskControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  listUsingGet$Response(params?: ListUsingGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<TaskSummaryDto>>> {
+  listUsingGet$Response(params?: ListUsingGet$Params, context?: HttpContext): Observable<StrictHttpResponse<TaskSummaryListDto>> {
     return listUsingGet(this.http, this.rootUrl, params, context);
   }
 
@@ -372,9 +372,9 @@ export class TaskControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  listUsingGet(params?: ListUsingGet$Params, context?: HttpContext): Observable<Array<TaskSummaryDto>> {
+  listUsingGet(params?: ListUsingGet$Params, context?: HttpContext): Observable<TaskSummaryListDto> {
     return this.listUsingGet$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<TaskSummaryDto>>): Array<TaskSummaryDto> => r.body)
+      map((r: StrictHttpResponse<TaskSummaryListDto>): TaskSummaryListDto => r.body)
     );
   }
 

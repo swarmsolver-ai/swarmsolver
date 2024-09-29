@@ -4,6 +4,7 @@ import {TaskControllerService} from "../api/services/task-controller.service";
 import {TaskSummaryDto} from "../api/models/task-summary-dto";
 import {TaskId} from "../api/models/task-id";
 import {WorkSpaceService} from "../work-space.service";
+import {TaskSummaryListDto} from "../api/models/task-summary-list-dto";
 
 @Injectable({
   providedIn: 'root'
@@ -12,11 +13,17 @@ export class TaskOverviewService {
 
   private selectedWorkSpace = this.workSpaceService.selectedWorkSpace;
 
-  filterState = signal<{ archived: boolean }>({ archived: false });
+  query = signal<TaskSummaryListDto>( {
+    filtering: {
+      archived: false
+    },
+    sorting: {
+      field: 'NAME',
+      order: 'ASCENDING'
+    }
+  });
 
-  private store = new BehaviorSubject<TaskSummaryDto[]>([])
-
-  public task$: Observable<TaskSummaryDto[]> = this.store
+  tasks = signal<TaskSummaryDto[]>([]);
 
   constructor(private taskControllerService: TaskControllerService, private workSpaceService: WorkSpaceService) {
     effect(() => {
@@ -28,9 +35,10 @@ export class TaskOverviewService {
   load() {
     this.taskControllerService.listUsingGet({
       workSpaceName: this.selectedWorkSpace(),
-      ...this.filterState(),
-    }).subscribe(value => {
-      this.store.next(value)
+      ...this.query().filtering!,
+      ...this.query().sorting,
+    }).subscribe(result => {
+      this.tasks.set(result.summaries!);
     })
   }
 
@@ -59,10 +67,12 @@ export class TaskOverviewService {
   }
 
   updateArchivedFilter( archived: boolean) {
-    let filterState = this.filterState()
-    this.filterState.set({
-      ... this.filterState(),
-      archived,
+    this.query.set({
+      filtering: {
+        ...this.query().filtering!,
+        archived
+      },
+      sorting: this.query().sorting
     });
     this.load();
   }

@@ -1,9 +1,7 @@
 package ai.swarmsolver.backend.app.task.controller;
 
 import ai.swarmsolver.backend.app.agent.app.AgentSummaryDTO;
-import ai.swarmsolver.backend.app.task.dto.FilterDTO;
-import ai.swarmsolver.backend.app.task.dto.TaskSummaryDTO;
-import ai.swarmsolver.backend.app.task.dto.UserMessageDTO;
+import ai.swarmsolver.backend.app.task.dto.*;
 import ai.swarmsolver.backend.app.task.model.Task;
 import ai.swarmsolver.backend.app.task.model.TaskCoordinate;
 import ai.swarmsolver.backend.app.task.model.TaskId;
@@ -70,13 +68,23 @@ public class TaskController {
     }
 
     @GetMapping(value= "/tasks", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<TaskSummaryDTO> list(String workSpaceName, boolean archived, boolean favorite, String name) {
+    public TaskSummaryListDTO list(
+            String workSpaceName,
+            boolean archived,
+            boolean favorite,
+            String name,
+            @RequestParam(value = "field", required = false, defaultValue = "NAME") SortingField field,
+            @RequestParam(value = "order", required = false, defaultValue = "ASCENDING") SortingOrder order) {
         FilterDTO filterDTO = FilterDTO.builder()
                 .archived(archived)
                 .favorite(favorite)
                 .name(name)
                 .build();
-        return taskService.list(workSpaceName, filterDTO);
+        SortingDTO sortingDTO = SortingDTO.builder()
+                .field(field)
+                .order(order)
+                .build();
+        return taskService.list(workSpaceName, filterDTO, sortingDTO);
     }
 
     @PostMapping(value="/agent", produces = MediaType.APPLICATION_JSON_VALUE)

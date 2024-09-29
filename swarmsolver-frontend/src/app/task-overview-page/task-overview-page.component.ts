@@ -21,11 +21,13 @@ export class TaskOverviewPageComponent implements OnInit {
   constructor(private service: TaskOverviewService, private route: ActivatedRoute, private modalService: ModalService, private workSpaceService: WorkSpaceService, private navigate: NavigationService) {
   }
 
-  task$: Observable<TaskSummaryDto[]> = this.service.task$
+  query = this.service.query;
 
-  workSpaces = this.workSpaceService.workSpaces
+  tasks = this.service.tasks;
 
-  selectedWorkSpace = this.workSpaceService.selectedWorkSpace
+  workSpaces = this.workSpaceService.workSpaces;
+
+  selectedWorkSpace = this.workSpaceService.selectedWorkSpace;
 
   ngOnInit(): void {
     this.service.load();
@@ -142,8 +144,6 @@ export class TaskOverviewPageComponent implements OnInit {
     this.navigate.changeOverviewPageUrlWithoutRouting(workspace);
   }
 
-  filterState = this.service.filterState;
-
   updateArchivedFilter($event: Event) {
     const isChecked = ($event.target as HTMLInputElement).checked;
     this.service.updateArchivedFilter(isChecked);
@@ -155,7 +155,7 @@ export class TaskOverviewPageComponent implements OnInit {
 
   activeFilterCount(): number {
     let count = 0;
-    if (this.filterState().archived) count += 1;
+    if (this.query().filtering!.archived) count += 1;
     return count;
   }
 }

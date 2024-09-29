@@ -5,7 +5,9 @@ import ai.swarmsolver.backend.app.agent.app.AgentSummaryDTO;
 import ai.swarmsolver.backend.app.agent.domain.AgentCoordinate;
 import ai.swarmsolver.backend.app.agent.domain.message.AgentMessage;
 import ai.swarmsolver.backend.app.task.dto.FilterDTO;
+import ai.swarmsolver.backend.app.task.dto.SortingDTO;
 import ai.swarmsolver.backend.app.task.dto.TaskSummaryDTO;
+import ai.swarmsolver.backend.app.task.dto.TaskSummaryListDTO;
 import ai.swarmsolver.backend.app.task.model.Task;
 import ai.swarmsolver.backend.app.task.model.TaskCoordinate;
 import ai.swarmsolver.backend.app.task.model.TaskId;
@@ -130,8 +132,12 @@ public class TaskService {
         return findSubTask(mainTask, subTaskCoordinate.getSubTaskId());
     }
 
-    public List<TaskSummaryDTO> list(String workSpaceName, FilterDTO filterDTO) {
-        return taskRepository.getMainTaskSummaries(TaskCoordinate.of(workSpaceName, null), filterDTO);
+    public TaskSummaryListDTO list(String workSpaceName, FilterDTO filterDTO) {
+        return list(workSpaceName, filterDTO, SortingDTO.defaultSorting());
+    }
+
+    public TaskSummaryListDTO list(String workSpaceName, FilterDTO filterDTO, SortingDTO sortingDTO) {
+        return taskRepository.getMainTaskSummaries(workSpaceName, filterDTO, sortingDTO);
     }
 
     public void updateTaskTitle(TaskCoordinate taskCoordinate, String title) {

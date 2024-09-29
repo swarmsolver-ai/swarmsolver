@@ -1,7 +1,6 @@
 package ai.swarmsolver.backend.app.task.repository;
 
-import ai.swarmsolver.backend.app.task.dto.FilterDTO;
-import ai.swarmsolver.backend.app.task.dto.TaskSummaryDTO;
+import ai.swarmsolver.backend.app.task.dto.*;
 import ai.swarmsolver.backend.app.task.model.Task;
 import ai.swarmsolver.backend.app.task.model.TaskCoordinate;
 import ai.swarmsolver.backend.app.task.model.TaskId;
@@ -54,16 +53,23 @@ public class TaskRepository {
 
 
     @SneakyThrows
-    public List<TaskSummaryDTO> getMainTaskSummaries(TaskCoordinate taskCoordinate, FilterDTO filterDTO) {
-        TaskWorkspace taskWorkspace = TaskWorkspace.of(directoryStructure, taskCoordinate);
+    public TaskSummaryListDTO getMainTaskSummaries(String workspace, FilterDTO filterDTO, SortingDTO sortingDTO) {
+        TaskWorkspace taskWorkspace = TaskWorkspace.of(directoryStructure, TaskCoordinate.of(workspace, null));
 
-        List<File> taskFiles = taskWorkspace.listMainTaskFileLocations();
-
-        return taskFiles.stream()
+        List<TaskSummaryDTO> summaries = taskWorkspace.listMainTaskFileLocations().stream()
                 .map(this::getSummary)
                 .filter(summary -> filter(summary, filterDTO))
-                .sorted(Comparator.comparing(TaskSummaryDTO::getTitle))
-                .collect(Collectors.toList());
+                .sorted(getComparator(sortingDTO))
+                .toList();
+
+        return TaskSummaryListDTO.builder()
+                .workspace(workspace)
+                .summaries(summaries)
+                .filtering(filterDTO)
+                .sorting(sortingDTO)
+                .build();
+
+
     }
 
     private boolean filter(TaskSummaryDTO summary, FilterDTO filterDTO) {
@@ -77,6 +83,15 @@ public class TaskRepository {
                 ;
     }
 
+    private Comparator<TaskSummaryDTO> getComparator(SortingDTO sortingDTO) {
+        Comparator<TaskSummaryDTO> comparator = switch (sortingDTO.getField()) {
+            case NAME -> Comparator.comparing(TaskSummaryDTO::getTitle);
+            case CREATED -> Comparator.comparing(TaskSummaryDTO::getCreated);
+        };
+        return (sortingDTO.getOrder() == SortingOrder.DESCENDING)
+            ? comparator.reversed()
+            : comparator;
+    }
 
     @SneakyThrows
     private TaskSummaryDTO getSummary(File file) {
