@@ -33,6 +33,8 @@ import { updateTaskArchivedUsingPut } from '../fn/task-controller/update-task-ar
 import { UpdateTaskArchivedUsingPut$Params } from '../fn/task-controller/update-task-archived-using-put';
 import { updateTaskFavoriteUsingPut } from '../fn/task-controller/update-task-favorite-using-put';
 import { UpdateTaskFavoriteUsingPut$Params } from '../fn/task-controller/update-task-favorite-using-put';
+import { updateTaskTagsUsingPut } from '../fn/task-controller/update-task-tags-using-put';
+import { UpdateTaskTagsUsingPut$Params } from '../fn/task-controller/update-task-tags-using-put';
 import { updateTaskTitleUsingPut } from '../fn/task-controller/update-task-title-using-put';
 import { UpdateTaskTitleUsingPut$Params } from '../fn/task-controller/update-task-title-using-put';
 import { userMessageUsingPost } from '../fn/task-controller/user-message-using-post';
@@ -308,6 +310,39 @@ export class TaskControllerService extends BaseService {
    */
   deleteTaskUsingPut(params?: DeleteTaskUsingPut$Params, context?: HttpContext): Observable<void> {
     return this.deleteTaskUsingPut$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
+    );
+  }
+
+  /** Path part for operation `updateTaskTagsUsingPut()` */
+  static readonly UpdateTaskTagsUsingPutPath = '/api/task/task/tags';
+
+  /**
+   * updateTaskTags.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `updateTaskTagsUsingPut()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  updateTaskTagsUsingPut$Response(params?: UpdateTaskTagsUsingPut$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return updateTaskTagsUsingPut(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * updateTaskTags.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `updateTaskTagsUsingPut$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  updateTaskTagsUsingPut(params?: UpdateTaskTagsUsingPut$Params, context?: HttpContext): Observable<void> {
+    return this.updateTaskTagsUsingPut$Response(params, context).pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
     );
   }

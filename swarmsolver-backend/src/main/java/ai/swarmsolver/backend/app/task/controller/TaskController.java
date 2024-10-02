@@ -6,6 +6,7 @@ import ai.swarmsolver.backend.app.task.model.Task;
 import ai.swarmsolver.backend.app.task.model.TaskCoordinate;
 import ai.swarmsolver.backend.app.task.model.TaskId;
 import ai.swarmsolver.backend.app.task.service.TaskService;
+import io.swagger.annotations.ApiParam;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,6 +45,11 @@ public class TaskController {
     @PutMapping(value = "/task/favorite", produces = MediaType.APPLICATION_JSON_VALUE)
     public void updateTaskFavorite(String workSpaceName, String taskId, boolean favorite) {
         taskService.updateTaskArchived(TaskCoordinate.of(workSpaceName, TaskId.of(taskId)), favorite);
+    }
+
+    @PutMapping(value = "/task/tags", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void updateTaskTags(String workSpaceName, String taskId, @ApiParam(value = "tags", required = true) @RequestBody List<String> tags) {
+        taskService.updateTaskTags(TaskCoordinate.of(workSpaceName, TaskId.of(taskId)), tags);
     }
 
     @PutMapping(value = "/task/remove", produces = MediaType.APPLICATION_JSON_VALUE)

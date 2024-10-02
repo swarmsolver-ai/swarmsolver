@@ -6,7 +6,6 @@ import ai.swarmsolver.backend.app.agent.domain.AgentCoordinate;
 import ai.swarmsolver.backend.app.agent.domain.message.AgentMessage;
 import ai.swarmsolver.backend.app.task.dto.FilterDTO;
 import ai.swarmsolver.backend.app.task.dto.SortingDTO;
-import ai.swarmsolver.backend.app.task.dto.TaskSummaryDTO;
 import ai.swarmsolver.backend.app.task.dto.TaskSummaryListDTO;
 import ai.swarmsolver.backend.app.task.model.Task;
 import ai.swarmsolver.backend.app.task.model.TaskCoordinate;
@@ -154,6 +153,10 @@ public class TaskService {
 
     public void updateTaskFavorite(TaskCoordinate mainTaskCoordinate, boolean favorite) {
         taskRepository.updateTaskFavorite(mainTaskCoordinate, favorite);
+    }
+
+    public void updateTaskTags(TaskCoordinate taskCoordinate, List<String> tags) {
+        taskRepository.updateTaskTags(taskCoordinate, tags);
     }
 
     public AgentSummaryDTO getAgentSummary(TaskCoordinate taskCoordinate) {

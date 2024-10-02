@@ -11,4 +11,5 @@ public class FilterDTO {
     private boolean archived;
     private boolean favorite;
     private String name;
+    private String tag;
 }

@@ -80,6 +80,8 @@ public class TaskRepository {
                 && (!filterDTO.isFavorite() || summary.isFavorite())
                 // when filter on name filter on partial matches
                 && ( (filterDTO.getName()==null || filterDTO.getName().isEmpty()) || summary.getTitle().contains(filterDTO.getName()))
+                // when filter on tag filter matches one of the tags
+                && (filterDTO.getTag()==null || (summary.getTags() != null && summary.getTags().contains(filterDTO.getTag())))
                 ;
     }
 
@@ -112,6 +114,7 @@ public class TaskRepository {
                 .favorite(task.isFavorite())
                 .created(created)
                 .lastUpdated(lastUpdated)
+                .tags(task.getTags())
                 .build();
     }
 
@@ -154,5 +157,10 @@ public class TaskRepository {
         this.store(taskCoordinate, task);
     }
 
+    public void updateTaskTags(TaskCoordinate taskCoordinate, List<String> tags) {
+        Task task = fetch(taskCoordinate);
+        task.setTags(tags);
+        this.store(taskCoordinate, task);
+    }
 
 }

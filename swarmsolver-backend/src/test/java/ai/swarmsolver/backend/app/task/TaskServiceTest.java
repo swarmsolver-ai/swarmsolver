@@ -2,7 +2,6 @@ package ai.swarmsolver.backend.app.task;
 
 import ai.swarmsolver.backend.app.TestBase;
 import ai.swarmsolver.backend.app.task.dto.FilterDTO;
-import ai.swarmsolver.backend.app.task.dto.SortingDTO;
 import ai.swarmsolver.backend.app.task.dto.TaskSummaryDTO;
 import ai.swarmsolver.backend.app.task.model.Task;
 import ai.swarmsolver.backend.app.task.model.TaskCoordinate;
@@ -265,4 +264,34 @@ public class TaskServiceTest extends TestBase {
             assertEquals(randomNames.get(i), list.get(i).getTitle());
         }
     }
+
+    @Test
+    public void setTags() {
+        // given a task with a subtask
+        TaskCoordinate taskCoordinate = taskStepDefs.createMainTask();
+
+        // given a list of tags
+        List<String> tags = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            tags.add("tag-" +UUID.randomUUID().toString());
+        }
+
+        // when I set a list of tags
+        taskService.updateTaskTags(taskCoordinate, tags);
+
+        // then task has the list of tags
+        assertEquals(tags, taskService.getMainTask(taskCoordinate).getTags());
+
+        // and the task can be found by one of its tags
+        String existingTag = tags.get(0);
+        FilterDTO existingTagFilter = FilterDTO.builder().tag(existingTag).build();
+        assertEquals(1, taskService.list("default", existingTagFilter).getSummaries().size());
+
+        String nonExistingTag = "non-existing-tag";
+        FilterDTO nonExistingTagFilter = FilterDTO.builder().tag(nonExistingTag).build();
+        assertEquals(0, taskService.list("default", nonExistingTagFilter).getSummaries().size());
+
+
+    }
+
 }

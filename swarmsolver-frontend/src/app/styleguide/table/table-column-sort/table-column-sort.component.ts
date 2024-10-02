@@ -16,7 +16,6 @@ export class TableColumnSortComponent {
   toggled: EventEmitter<Order> = new EventEmitter<Order>();
 
   toggle() {
-    console.log('toggled. emitting ', !this.sortOrder || this.sortOrder == 'DESCENDING'? 'ASCENDING' : 'DESCENDING')
     this.toggled.emit(!this.sortOrder || this.sortOrder == 'DESCENDING'? 'ASCENDING' : 'DESCENDING');
   }
 }

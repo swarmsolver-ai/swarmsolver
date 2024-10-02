@@ -6,5 +6,6 @@ export interface TaskSummaryDto {
   favorite?: boolean;
   id?: string;
   lastUpdated?: string;
+  tags?: Array<string>;
   title?: string;
 }

@@ -71,6 +71,14 @@ export class TaskOverviewService {
     }).subscribe(value => this.load())
   }
 
+  updateTaskTags(taskId: TaskId, tags: string[]) {
+    this.taskControllerService.updateTaskTagsUsingPut({
+      workSpaceName: this.selectedWorkSpace(),
+      taskId: taskId.identifier,
+      body: tags
+    }).subscribe(value => this.load())
+  }
+
   updateArchivedFilter( archived: boolean) {
     this.query.set({
       filtering: {

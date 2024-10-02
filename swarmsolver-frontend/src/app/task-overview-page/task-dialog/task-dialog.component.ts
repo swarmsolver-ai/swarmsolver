@@ -5,6 +5,7 @@ import {TaskId} from "../../api/models/task-id";
 export interface TaskDialogState {
   taskId: TaskId | null
   title: string | null
+  tags: string[] | null
 }
 
 export interface TaskDialogComponentSpec {
@@ -33,7 +34,8 @@ export class TaskDialogComponent implements OnChanges {
 
   formGroup: FormGroup = new FormGroup({
     taskId: new FormControl(null),
-    title: new FormControl(null, [Validators.required])
+    title: new FormControl(null, [Validators.required]),
+    tags: new FormControl(null)
   })
 
   get taskIdControl(): FormControl {

@@ -11,5 +11,6 @@ export interface Task {
   id?: TaskId;
   state?: 'COMPLETED' | 'CREATED' | 'STARTED';
   subTasks?: Array<Task>;
+  tags?: Array<string>;
   title?: string;
 }

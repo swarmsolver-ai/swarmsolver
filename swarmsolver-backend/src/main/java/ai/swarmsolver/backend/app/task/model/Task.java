@@ -25,6 +25,7 @@ public class Task {
     private String agentName;
     private boolean archived;
     private boolean favorite;
+    private List<String> tags;
 
     @JsonIgnore
     public boolean isComposite() {

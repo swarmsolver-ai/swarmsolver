@@ -730,6 +730,66 @@
         }
       }
     },
+    "/api/task/task/tags": {
+      "put": {
+        "tags": [
+          "task-controller"
+        ],
+        "summary": "updateTaskTags",
+        "operationId": "updateTaskTagsUsingPUT",
+        "parameters": [
+          {
+            "name": "workSpaceName",
+            "in": "query",
+            "description": "workSpaceName",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "taskId",
+            "in": "query",
+            "description": "taskId",
+            "required": false,
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
     "/api/task/task/title": {
       "put": {
         "tags": [
@@ -1022,6 +1082,9 @@
           },
           "name": {
             "type": "string"
+          },
+          "tag": {
+            "type": "string"
           }
         }
       },
@@ -1103,6 +1166,12 @@
               "$ref": "#/components/schemas/Task"
             }
           },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "title": {
             "type": "string"
           }
@@ -1152,6 +1221,12 @@
           "lastUpdated": {
             "type": "string",
             "format": "date-time"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "title": {
             "type": "string"

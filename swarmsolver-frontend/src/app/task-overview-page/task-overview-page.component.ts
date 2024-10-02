@@ -51,11 +51,12 @@ export class TaskOverviewPageComponent implements OnInit {
       mode: "EDIT",
       data: {
         taskId: {identifier: task.id},
-        title: task.title!
+        title: task.title!,
+        tags: task.tags ? task.tags : []
       },
       confirm: (data) => {
         this.confirmEdit(data);
-        this.closeTaskDialog()
+        this.closeTaskDialog();
       },
       cancel: () => this.closeTaskDialog()
     })
@@ -66,7 +67,8 @@ export class TaskOverviewPageComponent implements OnInit {
       mode: "CREATE",
       data: {
         taskId: null,
-        title: null
+        title: null,
+        tags: []
       },
 
       confirm: (data) => {
@@ -99,6 +101,7 @@ export class TaskOverviewPageComponent implements OnInit {
 
   private confirmEdit(data: TaskDialogState) {
     this.service.updateTaskTitle(data.taskId!, data.title!)
+    this.service.updateTaskTags(data.taskId!, data.tags!)
   }
 
   deleteTaskDialogId() {
