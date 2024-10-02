@@ -9,11 +9,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+@Getter
 public class TaskWorkspace {
 
     private final DirectoryStructure directoryStructure;
 
-    @Getter
     private final TaskCoordinate taskCoordinate;
 
     public TaskWorkspace(DirectoryStructure directoryStructure, TaskCoordinate taskCoordinate) {
@@ -26,7 +26,7 @@ public class TaskWorkspace {
     }
 
     public File getMainTasksDir() {
-        return new File(directoryStructure.getDataDir(taskCoordinate.getWorkSpaceName()));
+        return new File(directoryStructure.getDataDir(taskCoordinate.getWorkSpaceName()),  "tasks");
     }
 
     public File getMainTaskFileLocation() {
@@ -48,6 +48,10 @@ public class TaskWorkspace {
 
     public File getSubTaskDir() {
         return new File(new File(getMainTasksDir(), taskCoordinate.getMainTaskId().getIdentifier()), taskCoordinate.getSubTaskId().getIdentifier());
+    }
+
+    public File getWorkspaceResourcesDir() {
+        return new File(directoryStructure.getDataDir(taskCoordinate.getWorkSpaceName()), "resources");
     }
 
 }

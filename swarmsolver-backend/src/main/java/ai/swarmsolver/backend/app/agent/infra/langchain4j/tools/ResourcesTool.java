@@ -10,7 +10,6 @@ import lombok.Builder;
 import lombok.Singular;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -21,7 +20,7 @@ public class ResourcesTool implements ToolWithWorkspaceAccess {
     @Builder.Default
     private WorkspaceAccess workspaceAccess = null;
 
-    private boolean shared;
+    private ResourceScope scope;
 
     @Singular
     private List<ResourceDescriptor> resources;
@@ -34,11 +33,11 @@ public class ResourcesTool implements ToolWithWorkspaceAccess {
     @Tool("Read the contents of a resource in the workspace")
     public String readResource(@P("name of the resource") String resourceName) {
         try {
-            if(shared) {
-                return workspaceAccess.readSharedResource(resourceName);
-            } else {
-                return workspaceAccess.readResource(resourceName);
-            }
+            return switch(scope) {
+                case WORKSPACE -> workspaceAccess.readWorkspaceResource(resourceName);
+                case TASK -> workspaceAccess.readTaskResource(resourceName);
+                case STEP -> workspaceAccess.readStepResource(resourceName);
+            };
         } catch (Exception e) {
             return "RESOURCE NOT FOUND";
         }
@@ -47,11 +46,11 @@ public class ResourcesTool implements ToolWithWorkspaceAccess {
     @Tool("Write content to a resource in the workspace")
     public void writeResource(@P("name of the resource") String resourceName, @P("content to write") String content) {
         try {
-            if (shared) {
-                workspaceAccess.writeSharedResource(resourceName, content);
-            } else {
-                workspaceAccess.writeResource(resourceName, content);
-            }
+            switch(scope) {
+                case WORKSPACE -> workspaceAccess.writeWorkspaceResource(resourceName, content);
+                case TASK -> workspaceAccess.writeTaskResource(resourceName, content);
+                case STEP -> workspaceAccess.writeStepResource(resourceName, content);
+            };
         } catch (IOException e) {
             throw new RuntimeException("Error writing resource: " + resourceName, e);
         }

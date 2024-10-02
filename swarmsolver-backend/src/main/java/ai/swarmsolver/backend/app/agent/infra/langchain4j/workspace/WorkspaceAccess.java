@@ -15,8 +15,20 @@ public class WorkspaceAccess {
         this.agentWorkSpace = agentWorkSpace;
     }
 
-    public String readResource(String resourceName) throws IOException {
-        File resourceFile = getResourceFile(resourceName);
+    private File getWorkspaceResourceFile(String resourceName) {
+        return agentWorkSpace.getWorkspaceResourceFile(resourceName);
+    }
+
+    private File getTaskResourceFile(String resourceName) {
+        return agentWorkSpace.getTaskResourceFile(resourceName);
+    }
+
+    private File getStepResourceFile(String resourceName) {
+        return agentWorkSpace.getStepResourceFile(resourceName);
+    }
+
+    public String readWorkspaceResource(String resourceName) throws IOException{
+        File resourceFile = getWorkspaceResourceFile(resourceName);
         if (resourceFile.exists()) {
             return new String(Files.readAllBytes(Paths.get(resourceFile.getAbsolutePath())));
         } else {
@@ -24,30 +36,37 @@ public class WorkspaceAccess {
         }
     }
 
-    public void writeResource(String resourceName, String content) throws IOException {
-        File resourceFile = getResourceFile(resourceName);
+    public String readTaskResource(String resourceName) throws IOException{
+        File resourceFile = getTaskResourceFile(resourceName);
+        if (resourceFile.exists()) {
+            return new String(Files.readAllBytes(Paths.get(resourceFile.getAbsolutePath())));
+        } else {
+            throw new IOException("RESOURCE NOT FOUND");
+        }
+    }
+
+    public String readStepResource(String resourceName) throws IOException {
+        File resourceFile = getStepResourceFile(resourceName);
+        if (resourceFile.exists()) {
+            return new String(Files.readAllBytes(Paths.get(resourceFile.getAbsolutePath())));
+        } else {
+            throw new IOException("RESOURCE NOT FOUND");
+        }
+    }
+
+    public void writeWorkspaceResource(String resourceName, String content) throws IOException {
+        File resourceFile = getWorkspaceResourceFile(resourceName);
+        resourceFile.mkdirs();
         Files.write(Paths.get(resourceFile.getAbsolutePath()), content.getBytes());
     }
 
-    private File getResourceFile(String resourceName) {
-        return agentWorkSpace.getResourceFile(resourceName);
+    public void writeTaskResource(String resourceName, String content) throws IOException {
+        File resourceFile = getTaskResourceFile(resourceName);
+        Files.write(Paths.get(resourceFile.getAbsolutePath()), content.getBytes());
     }
 
-    private File getSharedResourceFile(String resourceName) {
-        return agentWorkSpace.getSharedResourceFile(resourceName);
-    }
-
-    public String readSharedResource(String resourceName) throws IOException{
-        File resourceFile = getSharedResourceFile(resourceName);
-        if (resourceFile.exists()) {
-            return new String(Files.readAllBytes(Paths.get(resourceFile.getAbsolutePath())));
-        } else {
-            throw new IOException("RESOURCE NOT FOUND");
-        }
-    }
-
-    public void writeSharedResource(String resourceName, String content) throws IOException {
-        File resourceFile = getSharedResourceFile(resourceName);
+    public void writeStepResource(String resourceName, String content) throws IOException {
+        File resourceFile = getStepResourceFile(resourceName);
         Files.write(Paths.get(resourceFile.getAbsolutePath()), content.getBytes());
     }
 }

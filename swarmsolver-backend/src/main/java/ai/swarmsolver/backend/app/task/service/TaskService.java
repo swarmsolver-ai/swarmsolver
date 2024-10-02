@@ -46,9 +46,9 @@ public class TaskService {
     public TaskCoordinate createMainTask(String workSpaceName, String title) {
         Task task = createTask(title);
         TaskCoordinate taskCoordinate = TaskCoordinate.of(workSpaceName, task.getId());
-        taskRepository.store(taskCoordinate, task);
         TaskWorkspace workspace = TaskWorkspace.of(directoryStructure, taskCoordinate);
         workspace.getMainTaskDir().mkdirs();
+        taskRepository.store(taskCoordinate, task);
         return taskCoordinate;
     }
 
