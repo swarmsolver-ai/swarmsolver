@@ -4,7 +4,7 @@
 
     <groupId>ai.swarmsolver</groupId>
     <artifactId>swarmsolver</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
@@ -27,17 +27,17 @@
             <dependency>
                 <groupId>ai.swarmsolver</groupId>
                 <artifactId>swarmsolver-backend</artifactId>
-                <version>0.2.0</version>
+                <version>0.3.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>ai.swarmsolver</groupId>
                 <artifactId>swarmsolver-frontend</artifactId>
-                <version>0.2.0</version>
+                <version>0.3.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>ai.swarmsolver</groupId>
                 <artifactId>swarmsolver-server-pe</artifactId>
-                <version>0.2.0</version>
+                <version>0.3.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
